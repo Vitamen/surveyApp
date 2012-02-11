@@ -1,6 +1,7 @@
 package controllers;
 
 import models.Choice;
+
 import play.mvc.Controller;
 
 public class RecommendationEngine {
@@ -9,7 +10,7 @@ public class RecommendationEngine {
 		return getChoice(2);
 	}
 	
-	public static Choice getChoice(int numChoices) {
+	public static Choice getChoice(int numRecommendations) {
 		Choice choice = new Choice();
 		return choice;
 	}
