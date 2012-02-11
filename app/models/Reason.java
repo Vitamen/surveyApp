@@ -19,4 +19,5 @@ public class Reason {
 
 	int reasonType;
 	int reason;
+	int categoryReason;
 }
