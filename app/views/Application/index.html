@@ -1,3 +1,33 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+#{fbg.scriptAsync /}
+
+
+
+<div class="fb-login-button" onlogin="facebookLogin();" scope="
+						user_about_me, user_activities, user_birthday, user_checkins, user_education_history, user_events, user_groups, user_hometown
+						user_interests, user_likes, user_relationships, user_relationship_details, user_relationship_details, user_religion_politics, user_work_history
+						friends_about_me, friends_activities, friends_birthday, friends_checkins, friends_education_history, friends_events, friends_groups,
+						friends_hometown, friends_interests, friends_likes, friends_relationships, friends_relationship_details, friends_religion_politics, friends_work_history">
+						
+						Login with Facebook</div>
+
+
+<script type="text/javascript">
+    function facebookLogin() {
+        // get current login status from facebook.com
+        FB.getLoginStatus(function(response) {
+            if (response.status === 'connected') {
+                // the user is logged in and connected to your app
+                window.location = "@{Application.facebookLogin()}";
+            } else {
+                window.location = "@{Application.facebookLogout()}";
+            }
+         });
+    }
+</script>
+
+
 <link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/main.css'}" />
 
 <div id="question">Which topic can you picture yourself having a conversation with?</div>
@@ -16,5 +46,4 @@
 <div class="topic-content">${topic2.content}</div>
 </a>
 </div>
-
 

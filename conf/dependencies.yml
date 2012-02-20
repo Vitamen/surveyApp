@@ -1,4 +1,9 @@
 # Application dependencies
 
 require:
-    - play
+    - play 
+    - play -> fbgraph 0.4:
+             transitive: false
+        
+
+    
