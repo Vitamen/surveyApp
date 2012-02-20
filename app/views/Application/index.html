@@ -1,1 +1,20 @@
-Which topic can you picture yourself having a conversation with?
+<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/main.css'}" />
+
+<div id="question">Which topic can you picture yourself having a conversation with?</div>
+<a href="/application/processrequest?topic=1">
+<div id="topic-1" class="topic">
+<div class="topic-title">${topic1.title}</div>
+<div class="topic-description">${topic1.description}</div>
+<div class="topic-content">${topic1.content}</div>
+</a>
+</div>
+
+<div id="topic-2" class="topic">
+<a href="/application/processrequest?topic=1">
+<div class="topic-title">${topic2.title}</div>
+<div class="topic-description">${topic2.description}</div>
+<div class="topic-content">${topic2.content}</div>
+</a>
+</div>
+
+
