@@ -18,16 +18,31 @@ import models.*;
 public class Application extends Controller {
 
 	static LinkedList<User> allUsers = new LinkedList<User>();
+	public static String[] feedLinks = {"http://feeds.feedburner.com/TechCrunch/"};
+	public static String[] feedCategories = {"Technology"};
 	
     public static void index() {
-    	RSSEngine.fetchNews();
-    	System.out.println("done fetching news");
-    	Topic topic1 = fetchTopic();
-    	Topic topic2 = fetchTopic();
-    	
-    	renderArgs.put("topic1", topic1);
-    	renderArgs.put("topic2", topic2);
-        render();
+    	if (generateFeeds()) {
+        	RSSEngine.fetchNews();
+        	Topic topic1 = fetchTopic();
+        	Topic topic2 = fetchTopic();
+        	
+        	renderArgs.put("topic1", topic1);
+        	renderArgs.put("topic2", topic2);
+            render();
+    	}
+    }
+    
+    public static boolean generateFeeds() {
+    	Feed.deleteAll();
+    	Topic.deleteAll();
+    	for (int i = 0; i < feedLinks.length; i++) {
+    		Feed feed = new Feed(feedLinks[i]);
+    		feed.tags.add(feedCategories[i]);
+    		feed.lastUpdate = new Date(0);
+    		feed.save();
+    	}
+    	return true;
     }
     
     public static void getUserLikes(){
@@ -92,7 +107,6 @@ public class Application extends Controller {
     }
 
     public static void processRequest(int topic) {
-    	System.out.println(topic);
     	index();
     }
     
