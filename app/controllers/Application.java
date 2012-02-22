@@ -22,7 +22,10 @@ public class Application extends Controller {
 	public static String[] feedCategories = {"Technology"};
 	
     public static void index() {
-    	if (generateFeeds()) {
+
+		// fetch the logged in user
+    	System.out.println(Likes.getLikeCategoryFromType("Software"));
+        if (generateFeeds()) {
         	RSSEngine.fetchNews();
         	Topic topic1 = fetchTopic();
         	Topic topic2 = fetchTopic();
@@ -90,20 +93,27 @@ public class Application extends Controller {
         index();
     }
 
-    
-
     public static void fetchTopics() {
     	Topic topic1 = fetchTopic();
     	Topic topic2 = fetchTopic();
     }
     
     public static Topic fetchTopic() {
-    	Topic topic = new Topic();
-    	topic.title = "Title";
-    	topic.description = "Description";
-    	topic.content = "Content";
-    	topic.link = "www.facebook.com";
-    	return topic;
+    	JsonObject profile;
+    	User loggedInUser;
+		try {
+			profile = FbGraph.getObject("me");
+			String email = profile.get("email").getAsString(); // retrieve the email
+	        loggedInUser = new User(profile.get("name").toString().replaceAll("\"", ""), profile.get("username").toString().replaceAll("\"", ""), profile.get("id").toString().replaceAll("\"", ""));
+		} catch (FbGraphException e) {
+			e.printStackTrace();
+		}
+		String tag = "Technology";
+				//getLeadingLikes(loggedInUser);
+		
+    	List<Topic> topics = Topic.find("select t from Topic t join t.tags as tag where tag = ?", tag).fetch();
+   
+        return topics.get(0);
     }
 
     public static void processRequest(int topic) {
