@@ -1,6 +1,7 @@
 package models;
 
 import play.*;
+
 import play.db.jpa.Model;
 import play.mvc.*;
 

@@ -1,6 +1,7 @@
 package controllers;
 
 import play.*;
+
 import play.modules.facebook.FbGraph;
 import play.modules.facebook.FbGraphException;
 import play.modules.facebook.Parameter;
@@ -16,7 +17,7 @@ import models.*;
 
 public class Application extends Controller {
 
-	
+	static LinkedList<User> allUsers = new LinkedList<User>();
 	
     public static void index() {
     	RSSEngine.fetchNews();
@@ -29,22 +30,35 @@ public class Application extends Controller {
         render();
     }
     
+    public static void getUserLikes(){
+    	User loggedInUser = allUsers.get(0);
+    	try {
+    		String userName = loggedInUser.userName;
+    		StringBuffer queryPart = new StringBuffer(userName+"/likes");
+			JsonArray userLikes = FbGraph.getConnection(queryPart.toString(), Parameter.with("limit", "10").parameters());
+			loggedInUser.addAllLikes(userLikes);
+    	} catch (FbGraphException e) {
+			e.printStackTrace();
+		}
+    }
+    
     public static void displayFriends(){
+    	//Get User Likes
+    	getUserLikes();
     	render();
     }
     
     public static void facebookLogin() {
         try {
             JsonObject profile = FbGraph.getObject("me"); // fetch the logged in user
-            String email = new String("default");
-            if (profile != null)
-            	email = profile.get("email").getAsString(); // retrieve the email
-            System.out.println(email);
-                      
+            String email = profile.get("email").getAsString(); // retrieve the email
+            User loggedInUser = new User(profile.get("name").toString().replaceAll("\"", ""), profile.get("username").toString().replaceAll("\"", ""), profile.get("id").toString().replaceAll("\"", ""));
+            System.out.println("Name: "+profile.get("name").toString()+"\nUser Name: "+profile.get("username").toString()+"\nID: "+profile.get("id"));
+            
+            allUsers.addFirst(loggedInUser);
+
             // do useful things
             Session.current().put("username", email); // put the email into the session (for the Secure module)
-            
-            System.out.println(Session.current().getAuthenticityToken().toString());
         } catch (FbGraphException fbge) {
             flash.error(fbge.getMessage());
             if (fbge.getType() != null && fbge.getType().equals("OAuthException")) {
