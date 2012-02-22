@@ -35,7 +35,7 @@ public class Application extends Controller {
     	try {
     		String userName = loggedInUser.userName;
     		StringBuffer queryPart = new StringBuffer(userName+"/likes");
-			JsonArray userLikes = FbGraph.getConnection(queryPart.toString(), Parameter.with("limit", "10").parameters());
+			JsonArray userLikes = FbGraph.getConnection(queryPart.toString(), Parameter.with("limit", "1000").parameters());
 			loggedInUser.addAllLikes(userLikes);
     	} catch (FbGraphException e) {
 			e.printStackTrace();
