@@ -10,6 +10,7 @@ import models.*;
 public class Application extends Controller {
 
 	public static String[] feedLinks = {"http://feeds.feedburner.com/TechCrunch/"};
+	public static String[] feedCategories = {"Technology"};
 	
     public static void index() {
     	if (generateFeeds()) {
@@ -28,6 +29,7 @@ public class Application extends Controller {
     	Topic.deleteAll();
     	for (int i = 0; i < feedLinks.length; i++) {
     		Feed feed = new Feed(feedLinks[i]);
+    		feed.tags.add(feedCategories[i]);
     		feed.lastUpdate = new Date(0);
     		feed.save();
     	}

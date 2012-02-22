@@ -16,6 +16,7 @@ import java.util.Locale;
 import javax.xml.stream.*;
 import javax.xml.stream.events.XMLEvent;
 
+import models.Choice;
 import models.Feed;
 import models.Topic;
 
@@ -75,6 +76,12 @@ public class RSSEngine {
 
 	public static Date fetchTopic(Feed feed, XMLEventReader eventReader) throws XMLStreamException {
 		Topic topic = new Topic();
+
+		Iterator<String> feedTagsIter =  feed.tags.iterator();
+		while (feedTagsIter.hasNext()) {
+			topic.tags.add(feedTagsIter.next());
+		}
+
 		Date updateDate = null;
 		boolean shouldSave = false;
 		ReadState readState = ReadState.NONE;
@@ -110,7 +117,7 @@ public class RSSEngine {
 						topic.content = data;
 						break;
 					case DESCRIPTION:
-						topic.description = data;
+						topic.description = data.substring(0, 255);
 						break;
 					case LINK:
 						topic.link = data;
