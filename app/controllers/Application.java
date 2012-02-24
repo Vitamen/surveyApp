@@ -111,8 +111,6 @@ public class Application extends Controller {
     	return obj;
     }
     
-    public static void processRequest(int topic) {
-    	index();
     /* Database Stuff */
     public static boolean generateFeeds() {
     	clearAll();
