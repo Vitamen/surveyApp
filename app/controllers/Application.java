@@ -5,6 +5,8 @@ import play.mvc.*;
 
 import java.util.*;
 
+import com.google.gson.JsonObject;
+
 import models.*;
 
 public class Application extends Controller {
@@ -27,5 +29,18 @@ public class Application extends Controller {
     	Topic topic = null;
     	return topic;
     }
+    
+    public static void login(String username, String password){
+    	System.out.println(username);
+    	JsonObject js = new JsonObject();
+    	js.addProperty("status","ok");
+    	renderJSON(js.toString());
+    }
 
+    public static void login(String username){
+    	System.out.println(username);
+    	JsonObject js = new JsonObject();
+    	js.addProperty("status","ok");
+    	renderJSON(js.toString());
+    }
 }
