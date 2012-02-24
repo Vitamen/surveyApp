@@ -7,8 +7,8 @@ import play.db.jpa.Model;
 @Entity
 public class LikeFrequency extends Model implements Comparable{
 
-	String likeCategory;
-	int frequency;
+	public String likeCategory;
+	public int frequency;
 	public LikeFrequency(String likeCat, int i) {
 		likeCategory = likeCat;
 		frequency = i;
@@ -19,31 +19,13 @@ public class LikeFrequency extends Model implements Comparable{
 		if (!(o instanceof LikeFrequency))
 			throw new ClassCastException("Invalid Object");
 		
-		int freq = ((LikeFrequency)o).getFrequency();
-		if (this.getFrequency() > freq)
+		int freq = ((LikeFrequency)o).frequency;
+		if (this.frequency > freq)
 			return 1;
-		else if (this.getFrequency() < freq)
+		else if (this.frequency < freq)
 			return -1;
 		else
 			return 0;
 		
-	}
-	
-	public void setFrequency(int frequency)
-	{
-		this.frequency= frequency;
-	}
-	
-	public int getFrequency(){
-		return frequency;
-	}
-	
-	public String getLikeCategory(){
-		return likeCategory;
-	}
-	
-	public void setLikeCategory(String likeCategory)
-	{
-		this.likeCategory = likeCategory;
 	}
 }

@@ -12,7 +12,8 @@ import javax.persistence.*;
 @Entity
 public class Choice extends Model{
 	
-	@ManyToMany
+	@ManyToMany 
+	@JoinColumn
 	public List<Recommendation> recommendations;
 	public int selection;
 	

@@ -20,6 +20,5 @@ public class AnalysisEngine extends Controller {
 	public static void reasonComparator(int reasonOneType, int reasonTwoType) {
 		Reason reason1 = Reason.getCategoryReason(reasonOneType);
 		Reason reason2 = Reason.getCategoryReason(reasonTwoType);
-		
 	}
 }

@@ -1,0 +1,33 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+#{fbg.scriptAsync /}
+
+<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/main.css'}" />
+
+<div id="question">Which topic can you picture yourself having a conversation with?</div>
+<form name="choice1Form" action="/submitChoice" id="submitChoice" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+<input type="hidden" name="choiceId" value="${choice.id}" />
+<input type="hidden" name="selection" value="0" />
+</form>
+<a href="#" onclick="document.forms['choice1Form'].submit(); return false;">
+<div id="topic-1" class="topic">
+%{
+	topic = choice.recommendations.get(0).topic
+}%
+<div class="topic-title">${topic.title}</div>
+<div class="topic-description">${topic.description}</div>
+<div class="topic-content">${topic.content}</div>
+</a>
+</div>
+
+<div id="topic-2" class="topic">
+<a href="/application/processrequest?topic=1">
+%{
+	topic = choice.recommendations.get(1).topic
+}%
+<div class="topic-title">${topic.title}</div>
+<div class="topic-description">${topic.description}</div>
+<div class="topic-content">${topic.content}</div>
+</a>
+</div>
+

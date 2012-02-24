@@ -5,7 +5,7 @@
 # Home page
 GET     /                                       Application.index
 
-POST	/submitChoice							Application.processChoice
+POST	/submitChoice							RecommendationEngine.processChoice
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

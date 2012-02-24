@@ -37,6 +37,7 @@ public class User extends Model{
 		this.userName = userName;
 		this.userId = userId;
 		allUserLikes = new LinkedList<Likes>();
+		frequencyOfLikes = new LinkedList<LikeFrequency>();
 	}
 	
 	public void addLike(Likes newLike){

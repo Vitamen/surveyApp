@@ -12,9 +12,11 @@ import javax.persistence.*;
 public class Recommendation extends Model{
 	
 	@ManyToOne
+	@JoinColumn
 	public Topic topic;
 	
 	@ManyToMany
+	@JoinColumn
 	public List<Reason> reasons;
 	
 	public Recommendation(Topic topic) {
