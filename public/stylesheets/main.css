@@ -1,0 +1,38 @@
+* {
+	font-family: Georgia, "Times New Roman";
+	width:100%;
+}
+
+.topic {
+	margin-top: 30px;
+	display: inline-block;
+	width: 30%;
+	height: 500px;
+	padding: 10px;
+	border: solid;
+	border-radius: 15px;
+}
+
+.topic a {
+	display: block;
+    height: 100%;
+    width: 100%;
+    text-decoration: none;
+}
+
+.topic-title {
+	text-align: center;
+	font-size: 250%;
+	font-weight: bold;
+}
+
+#question {
+	text-align: center;
+}
+#topic-1 {
+	margin-left:10%;
+	margin-right:5%;
+}
+#topic-2 {
+	margin-left: 7%;
+}

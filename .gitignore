@@ -13,4 +13,7 @@ precompiled
 tmp
 test-result
 eclipse
+modules/fbgraph-0.4
 server.pid
+
+.classpath
