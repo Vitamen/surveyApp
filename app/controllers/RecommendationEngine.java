@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import models.Choice;
 import models.LikeFrequency;
 import models.LikeFrequencyComparator;
+import models.Likes;
 import models.Reason;
 import models.Recommendation;
 import models.Topic;
@@ -21,9 +22,10 @@ import play.mvc.Scope.Session;
 public class RecommendationEngine extends Controller{
 
 	public static void index() {
+		Application.getUserLikes();
 		RSSEngine.fetchNews();
-    	Topic topic1 = fetchTopic();
-    	Topic topic2 = fetchTopic();
+    	Topic topic1 = fetchTopic(0);
+    	Topic topic2 = fetchTopic(1);
  
     	Recommendation rec1 = new Recommendation(topic1);
     	Reason likeCategoryReason = Reason.getLikeCategoryReason();
@@ -52,31 +54,31 @@ public class RecommendationEngine extends Controller{
 		Choice choice = new Choice();
 		return choice;
 	}
-	
-	public static void fetchTopics() {
-    	Topic topic1 = fetchTopic();
-    	Topic topic2 = fetchTopic();
-    }
     
-    public static Topic fetchTopic() {
+    public static Topic fetchTopic(int seed) {
     	JsonObject profile;
     	User user = User.findById(Long.parseLong(Session.current().get("user")));
-		
+    	user.addAllLikes(null);
+		String tag = "Technology";
+    	
 		if (user != null) {
 			System.out.println("Found a user!");
 			List<LikeFrequency> likeFrequencies = user.frequencyOfLikes;
 			Collections.sort(likeFrequencies, new LikeFrequencyComparator());
-			LikeFrequency lf = likeFrequencies.get(0);
-			String tag2 = lf.likeCategory;
-			System.out.println("Found a common tag: "+tag2);
+			LikeFrequency lf;
+			if (likeFrequencies.size() > seed) {
+				lf = likeFrequencies.get(seed);
+				tag = Likes.getLikeGroupFromCategory(lf.likeCategory);
+			}
+			System.out.println("Found a common tag: "+tag);
 		}
-    	
-    	String tag = "Technology";
-		
 		
     	List<Topic> topics = Topic.find("select t from Topic t join t.tags as tag where tag = ?", tag).fetch();
    
-        return topics.get(0);
+    	if (topics == null || topics.size() == 0) {
+    		return null;
+    	}
+    	return topics.get(0);
     }
     
     

@@ -117,7 +117,11 @@ public class RSSEngine {
 						topic.content = data;
 						break;
 					case DESCRIPTION:
-						topic.description = data.substring(0, 255);
+						if (data.length() > 255) {
+							topic.description = data.substring(0, 255);
+						} else {
+							topic.description = data;
+						}
 						break;
 					case LINK:
 						topic.link = data;

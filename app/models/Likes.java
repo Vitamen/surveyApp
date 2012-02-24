@@ -29,7 +29,7 @@ public class Likes extends Model{
 	public static void generateLikeMap() {
 		likeMap = new HashMap<String, Set<String> >();
 		String[][] likeTypes = {
-				{"Computer", "Electronics", "Software", "Computers/Technology", "Internet/Software", "TeleCommunication"}
+				{"Computer", "Electronics", "Software", "Computers/Technology", "Internet/software", "TeleCommunication"}
 		};
 		String[] likeGroups = {
 				"Technology"
@@ -50,15 +50,15 @@ public class Likes extends Model{
 			generateLikeMap();
 		}
 		
-		Set < String> groupSet = likeMap.keySet();
-		Iterator < String > groupIter = groupSet.iterator();
+		Set <String> groupSet = likeMap.keySet();
+		Iterator <String> groupIter = groupSet.iterator();
 		while (groupIter.hasNext()) {
 			String group = groupIter.next();
 			if (likeMap.get(group).contains(type)) {
 				return group;
 			}
 		}
-		
+		System.out.println("System does not recognize the type "+type+". Please enter category for this type");
 		Scanner scanner = new Scanner(System.in);
 		String group = scanner.next();
 		
@@ -68,7 +68,7 @@ public class Likes extends Model{
 			HashSet<String> tempTypeSet = new HashSet<String>();
 			likeMap.put(group, tempTypeSet);
 		}
-
+		System.out.println("here");
 		return group;
 	}
 }

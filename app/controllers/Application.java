@@ -17,12 +17,13 @@ import models.*;
 
 public class Application extends Controller {
 
-	public static String[] feedLinks = {"http://feeds.feedburner.com/TechCrunch/"};
-	public static String[] feedCategories = {"Technology"};
+	public static String[] feedLinks = {"http://feeds.feedburner.com/TechCrunch/", "http://www.wpxi.com/feeds/categories/news/"};
+	public static String[] feedCategories = {"Technology", "Local"};
 	
     public static void index() {
-    	//generateFeeds();
-    	if (Session.current().contains("user")) {
+    	generateFeeds();
+    	User loggedInUser = User.findById(Long.parseLong(Session.current().get("user")));
+    	if (loggedInUser != null) {
     		RecommendationEngine.index();
     	} else {
     		render();
@@ -31,6 +32,9 @@ public class Application extends Controller {
 
     public static boolean getUserLikes(){
     	User loggedInUser = User.findById(Long.parseLong(Session.current().get("user"))); 
+    	if (loggedInUser == null) {
+    		return false;
+    	}
     	try {
     		String userName = loggedInUser.userName;
     		StringBuffer queryPart = new StringBuffer(userName+"/likes");
