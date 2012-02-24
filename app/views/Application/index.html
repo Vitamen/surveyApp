@@ -2,8 +2,6 @@
 #{set title:'Home' /}
 #{fbg.scriptAsync /}
 
-
-
 <div class="fb-login-button" onlogin="facebookLogin();" scope="
 						user_about_me, user_activities, user_birthday, user_checkins, user_education_history, user_events, user_groups, user_hometown
 						user_interests, user_likes, user_relationships, user_relationship_details, user_relationship_details, user_religion_politics, user_work_history
@@ -31,19 +29,29 @@
 <link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/main.css'}" />
 
 <div id="question">Which topic can you picture yourself having a conversation with?</div>
-<a href="/application/processrequest?topic=1">
+<form name="choice1Form" action="/submitChoice" id="submitChoice" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+<input type="hidden" key="choiceId" value="${choice.id}" />
+<input type="hidden" key="selection" value="0" />
+</form>
+<a href="#" onclick="document.forms['choice1Form'].submit(); return false;">
 <div id="topic-1" class="topic">
-<div class="topic-title">${topic1.title}</div>
-<div class="topic-description">${topic1.description}</div>
-<div class="topic-content">${topic1.content}</div>
+%{
+	topic = choice.recommendations.get(0).topic
+}%
+<div class="topic-title">${topic.title}</div>
+<div class="topic-description">${topic.description}</div>
+<div class="topic-content">${topic.content}</div>
 </a>
 </div>
 
 <div id="topic-2" class="topic">
 <a href="/application/processrequest?topic=1">
-<div class="topic-title">${topic2.title}</div>
-<div class="topic-description">${topic2.description}</div>
-<div class="topic-content">${topic2.content}</div>
+%{
+	topic = choice.recommendations.get(1).topic
+}%
+<div class="topic-title">${topic.title}</div>
+<div class="topic-description">${topic.description}</div>
+<div class="topic-content">${topic.content}</div>
 </a>
 </div>
 

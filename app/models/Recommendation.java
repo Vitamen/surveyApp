@@ -6,14 +6,15 @@ import play.mvc.*;
 
 import java.util.*;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 @Entity
 public class Recommendation extends Model{
+	
+	@ManyToOne
 	public Topic topic;
 	
-	@OneToMany
+	@ManyToMany
 	public List<Reason> reasons;
 	
 	public Recommendation(Topic topic) {
