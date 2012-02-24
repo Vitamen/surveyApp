@@ -11,6 +11,7 @@ import play.mvc.Scope.Session;
 import java.util.*;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import models.*;
@@ -51,6 +52,7 @@ public class Application extends Controller {
     		String userName = loggedInUser.userName;
     		StringBuffer queryPart = new StringBuffer(userName+"/likes");
 			JsonArray userLikes = FbGraph.getConnection(queryPart.toString(), Parameter.with("limit", "1000").parameters());
+			
 			loggedInUser.addAllLikes(userLikes);
     	} catch (FbGraphException e) {
 			e.printStackTrace();
