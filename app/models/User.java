@@ -50,6 +50,7 @@ public class User extends Model{
 			for (int i = 0; i < allLikes.size(); i++)
 			{
 				JsonObject tempJsonObject = (JsonObject)allLikes.get(i);
+				String category = tempJsonObject.get("category").toString();
 				Likes tempLike = new Likes(tempJsonObject.get("name").toString(), tempJsonObject.get("category").toString(), tempJsonObject.get("id").toString());
 				addLike(tempLike);
 				String likeCategory = tempLike.category;

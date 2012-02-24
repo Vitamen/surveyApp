@@ -23,20 +23,40 @@ public class Application extends Controller {
 	public static String[] feedCategories = {"Technology"};
 	
     public static void index() {
-    	if (generateFeeds()) {
-        	RSSEngine.fetchNews();
-        	Topic topic1 = fetchTopic();
-        	Topic topic2 = fetchTopic();
-        	
-        	renderArgs.put("topic1", topic1);
-        	renderArgs.put("topic2", topic2);
-            render();
-    	}
+    	generateFeeds();
+		// fetch the logged in user
+    	System.out.println(Likes.getLikeGroupFromCategory("Software"));
+    	RSSEngine.fetchNews();
+    	Topic topic1 = fetchTopic();
+    	Topic topic2 = fetchTopic();
+ 
+    	Recommendation rec1 = new Recommendation(topic1);
+    	Reason likeCategoryReason = Reason.getLikeCategoryReason();
+    	rec1.addReason(likeCategoryReason);
+    	rec1.save();
+    	
+    	Recommendation rec2 = new Recommendation(topic2);
+    	rec2.addReason(likeCategoryReason);
+    	rec2.save();
+    	
+    	Choice choice = new Choice();
+    	choice.addRecommendation(rec1);
+    	choice.addRecommendation(rec2);
+    	choice.save();
+    	
+    	renderArgs.put("choice", choice);
+    	renderArgs.put("topic1", topic1);
+    	renderArgs.put("topic2", topic2);
+        render();
     }
     
     public static boolean generateFeeds() {
-    	Feed.deleteAll();
+    	Recommendation.deleteAll();
+    	Choice.deleteAll();
+    	Reason.deleteAll();
     	Topic.deleteAll();
+    	Feed.deleteAll();
+    	
     	for (int i = 0; i < feedLinks.length; i++) {
     		Feed feed = new Feed(feedLinks[i]);
     		feed.tags.add(feedCategories[i]);
@@ -92,23 +112,41 @@ public class Application extends Controller {
         index();
     }
 
-    
-
     public static void fetchTopics() {
     	Topic topic1 = fetchTopic();
     	Topic topic2 = fetchTopic();
     }
     
     public static Topic fetchTopic() {
-    	Topic topic = new Topic();
-    	topic.title = "Title";
-    	topic.description = "Description";
-    	topic.content = "Content";
-    	topic.link = "www.facebook.com";
-    	return topic;
+    	/*JsonObject profile;
+    	User loggedInUser;
+		try {
+			profile = FbGraph.getObject("me");
+			String email = profile.get("email").getAsString(); // retrieve the email
+	        loggedInUser = new User(profile.get("name").toString().replaceAll("\"", ""), profile.get("username").toString().replaceAll("\"", ""), profile.get("id").toString().replaceAll("\"", ""));
+		} catch (FbGraphException e) {
+			e.printStackTrace();
+		}*/
+		String tag = "Technology";
+				//getLeadingLikes(loggedInUser);
+		
+    	List<Topic> topics = Topic.find("select t from Topic t join t.tags as tag where tag = ?", tag).fetch();
+   
+        return topics.get(0);
     }
 
     public static void processRequest(int topic) {
+    	index();
+    }
+    
+    public static void processChoice(long choiceId, int selection) {
+    	Choice choice = Choice.findById(choiceId);
+    	if (choice == null) {
+    		System.out.println("ERROR: Could not find choice with id "+choiceId);
+    		return;
+    	}
+    	
+    	choice.selection = selection;
     	index();
     }
     
