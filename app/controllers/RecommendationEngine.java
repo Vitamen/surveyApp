@@ -60,14 +60,15 @@ public class RecommendationEngine extends Controller{
     
     public static Topic fetchTopic() {
     	JsonObject profile;
-    	User user = null;
+    	User user = User.findById(Long.parseLong(Session.current().get("user")));
 		
 		if (user != null) {
+			System.out.println("Found a user!");
 			List<LikeFrequency> likeFrequencies = user.frequencyOfLikes;
 			Collections.sort(likeFrequencies, new LikeFrequencyComparator());
 			LikeFrequency lf = likeFrequencies.get(0);
 			String tag2 = lf.likeCategory;
-			System.out.println(tag2);
+			System.out.println("Found a common tag: "+tag2);
 		}
     	
     	String tag = "Technology";
@@ -81,7 +82,6 @@ public class RecommendationEngine extends Controller{
     
     /* Response */
     public static void processChoice(long choiceId, int selection) {
-    	System.out.println("Choice : "+choiceId+" and Selection: "+selection);
     	Choice choice = Choice.findById(choiceId);
     	if (choice == null) {
     		System.out.println("ERROR: Could not find choice with id "+choiceId);

@@ -56,7 +56,7 @@ public class Application extends Controller {
             System.out.println(profile);
             //System.out.println(profile.get("email"));
             //String email = profile.get("email").getAsString(); // retrieve the email
-            List<User> userList = User.find("byUserId", profile.get("id")).fetch();
+            List<User> userList = User.find("byUserId", profile.get("id").toString().replaceAll("\"", "")).fetch();
             User user;
             
             if (userList == null || userList.size() == 0) {
