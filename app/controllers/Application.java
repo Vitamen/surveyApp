@@ -1,7 +1,6 @@
 package controllers;
 
 import play.*;
-
 import play.modules.facebook.FbGraph;
 import play.modules.facebook.FbGraphException;
 import play.modules.facebook.Parameter;
