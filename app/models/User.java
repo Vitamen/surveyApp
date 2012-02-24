@@ -79,7 +79,6 @@ public class User extends Model{
 		Iterator itr = frequencyOfLikes.iterator();
 		while (itr.hasNext()){
 			LikeFrequency temp = (LikeFrequency)itr.next();
-			System.out.println("Category "+ temp.likeCategory+"Like Frequency "+ temp.frequency );
 		}
 	}
 	

@@ -16,7 +16,6 @@ import com.google.gson.JsonObject;
 import models.*;
 
 public class Application extends Controller {
-
 	public static String[] feedLinks = {"http://feeds.feedburner.com/TechCrunch/", "http://www.wpxi.com/feeds/categories/news/"};
 	public static String[] feedCategories = {"Technology", "Local"};
 	
@@ -57,9 +56,6 @@ public class Application extends Controller {
     public static void facebookLogin() {
         try {
             JsonObject profile = FbGraph.getObject("me"); // fetch the logged in user
-            System.out.println(profile);
-            //System.out.println(profile.get("email"));
-            //String email = profile.get("email").getAsString(); // retrieve the email
             List<User> userList = User.find("byUserId", profile.get("id").toString().replaceAll("\"", "")).fetch();
             User user;
             

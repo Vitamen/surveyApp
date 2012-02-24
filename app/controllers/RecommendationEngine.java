@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import models.Choice;
 import models.LikeFrequency;
 import models.LikeFrequencyComparator;
+import models.LikeGroup;
 import models.Likes;
 import models.Reason;
 import models.Recommendation;
@@ -62,15 +63,13 @@ public class RecommendationEngine extends Controller{
 		String tag = "Technology";
     	
 		if (user != null) {
-			System.out.println("Found a user!");
 			List<LikeFrequency> likeFrequencies = user.frequencyOfLikes;
 			Collections.sort(likeFrequencies, new LikeFrequencyComparator());
 			LikeFrequency lf;
 			if (likeFrequencies.size() > seed) {
 				lf = likeFrequencies.get(seed);
-				tag = Likes.getLikeGroupFromCategory(lf.likeCategory);
+				tag = LikeGroup.getLikeGroupFromCategory(lf.likeCategory);
 			}
-			System.out.println("Found a common tag: "+tag);
 		}
 		
     	List<Topic> topics = Topic.find("select t from Topic t join t.tags as tag where tag = ?", tag).fetch();
