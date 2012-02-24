@@ -11,8 +11,8 @@ POST	/submitChoice							Application.processChoice
 GET     /favicon.ico                            404
 
 GET 	/application/login/{username}					Application.login
-GET 	/application/login/{username}/{password}					Application.login
-
+GET 	/application/login/{username}/{password}		Application.login
+GET 	/application/getUserInformation/{username}/{authentication}
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public

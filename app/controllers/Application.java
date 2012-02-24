@@ -9,11 +9,8 @@ import play.mvc.Scope.Session;
 
 import java.util.*;
 
-<<<<<<< HEAD
-=======
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
->>>>>>> 1a250b563837c79e602201047a5d4ce9f67fb48c
 import com.google.gson.JsonObject;
 
 import models.*;
@@ -144,15 +141,25 @@ public class Application extends Controller {
     	renderJSON(js.toString());
     }
 
-<<<<<<< HEAD
     public static void login(String username){
     	System.out.println(username);
     	JsonObject js = new JsonObject();
     	js.addProperty("status","ok");
     	renderJSON(js.toString());
     }
-}
-=======
+
+    public static JsonObject getUserInformation(String userName, String authenticationToken){
+    	try {
+			JsonObject user = FbGraph.getObject(userName, Parameter.with("access_token", authenticationToken).parameters());
+		} catch (FbGraphException e) {
+			System.out.println("There was an error in the getUserInformationMethod");
+			e.printStackTrace();
+		}
+    	JsonObject obj = new JsonObject();
+    	obj.addProperty("test", "Is Extracting");
+    	return obj;
+    }
+    
     public static void processRequest(int topic) {
     	index();
     }
@@ -172,4 +179,3 @@ public class Application extends Controller {
     	renderJSON("Please Place Json String here");
     }
 }
->>>>>>> 1a250b563837c79e602201047a5d4ce9f67fb48c
