@@ -13,6 +13,7 @@ GET     /favicon.ico                            404
 GET 	/application/login/{username}					Application.login
 GET 	/application/login/{username}/{password}		Application.login
 GET 	/application/getUserInformation/{userName}/{authenticationToken} Application.getUserInformation
+GET 	/application/getRSSFeeds/{userName}				Application.getRSSFeeds
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public

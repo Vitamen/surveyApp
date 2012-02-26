@@ -2,7 +2,7 @@
 #{set title:'Home' /}
 #{fbg.scriptAsync /}
 
-<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/main.css'}" />
+<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/recommendation.css'}" />
 
 <div id="question">Which topic can you picture yourself having a conversation with?</div>
 <form name="choice1Form" action="/submitChoice" id="submitChoice" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
@@ -15,7 +15,7 @@
 	topic = choice.recommendations.get(0).topic
 }%
 <div class="topic-title">${topic.title}</div>
-<div class="topic-description">${topic.description.raw()}</div>
+<div class="topic-description">${topic.description}</div>
 </a>
 </div>
 
