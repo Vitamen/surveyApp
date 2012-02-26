@@ -13,11 +13,17 @@ public class Topic extends Model {
 	public List<String> tags;
 	
 	public String title;
+	
+	@Column (columnDefinition="TEXT")
 	public String description;
-	public String content;
+	
+	@Lob
 	public String link;
 	
 	public Topic() {
 		tags = new ArrayList<String>();
+		title = "";
+		description = "";
+		link = "";
 	}
 }

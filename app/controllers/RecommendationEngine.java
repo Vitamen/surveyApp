@@ -1,9 +1,21 @@
 package controllers;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import com.google.gson.JsonObject;
+import com.sun.cnpi.rss.elements.Item;
+import com.sun.cnpi.rss.elements.Rss;
+import com.sun.cnpi.rss.parser.RssParser;
+import com.sun.cnpi.rss.parser.RssParserException;
+import com.sun.cnpi.rss.parser.RssParserFactory;
 
 import models.Choice;
 import models.LikeFrequency;
@@ -23,8 +35,11 @@ import play.mvc.Scope.Session;
 public class RecommendationEngine extends Controller{
 
 	public static void index() {
+		//Application.generateFeeds();
+		//LikeGroup.generateLikeGroupsFromStaticArray();
+		
 		Application.getUserLikes();
-		RSSEngine.fetchNews();
+		//RSSEngine.fetchNews();
     	Topic topic1 = fetchTopic(0);
     	Topic topic2 = fetchTopic(1);
  
@@ -58,9 +73,15 @@ public class RecommendationEngine extends Controller{
     
     public static Topic fetchTopic(int seed) {
     	JsonObject profile;
+    	
     	User user = User.findById(Long.parseLong(Session.current().get("user")));
-    	user.addAllLikes(null);
-		String tag = "Technology";
+    	
+    	String tag;
+    	if (seed == 0) {
+    		tag = "Entertainment";
+    	} else {
+    		tag = "Fashion";
+    	}
     	
 		if (user != null) {
 			List<LikeFrequency> likeFrequencies = user.frequencyOfLikes;

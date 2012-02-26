@@ -15,19 +15,21 @@
 	topic = choice.recommendations.get(0).topic
 }%
 <div class="topic-title">${topic.title}</div>
-<div class="topic-description">${topic.description}</div>
-<div class="topic-content">${topic.content}</div>
+<div class="topic-description">${topic.description.raw()}</div>
 </a>
 </div>
 
+<form name="choice2Form" action="/submitChoice" id="submitChoice" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+<input type="hidden" name="choiceId" value="${choice.id}" />
+<input type="hidden" name="selection" value="1" />
+</form>
+<a href="#" onclick="document.forms['choice2Form'].submit(); return false;">
 <div id="topic-2" class="topic">
-<a href="/application/processrequest?topic=1">
 %{
 	topic = choice.recommendations.get(1).topic
 }%
 <div class="topic-title">${topic.title}</div>
 <div class="topic-description">${topic.description}</div>
-<div class="topic-content">${topic.content}</div>
 </a>
 </div>
 
