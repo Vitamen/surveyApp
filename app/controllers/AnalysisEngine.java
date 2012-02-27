@@ -1,9 +1,12 @@
 package controllers;
 
 import play.*;
+import play.db.jpa.JPA;
 import play.mvc.*;
 
 import java.util.*;
+
+import javax.persistence.Query;
 
 import models.*;
 
@@ -18,7 +21,15 @@ public class AnalysisEngine extends Controller {
 	}
 	
 	public static void reasonComparator(int reasonOneType, int reasonTwoType) {
-		Reason reason1 = Reason.getCategoryReason(reasonOneType);
-		Reason reason2 = Reason.getCategoryReason(reasonTwoType);
+		Reason reasonOne = Reason.find("byTypeAndIsCategory", reasonOneType, true).first();
+		Reason reasonTwo = Reason.find("byTypeAndIsCategory", reasonTwoType, true).first();
+		
+		List<Choice> choicesOne = Choice.find("SELECT DISTINCT c " +
+				"FROM Choice c JOIN c.recommendations r WHERE " +
+				"? MEMBER OF r.reasons", reasonOne).fetch();
+		
+		List<Choice> choicesTwo = Choice.find("SELECT DISTINCT c " +
+				"FROM Choice c JOIN c.recommendations r WHERE " +
+				"? MEMBER OF r.reasons", reasonTwo).fetch();
 	}
 }
