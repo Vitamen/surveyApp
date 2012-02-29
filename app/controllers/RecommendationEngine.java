@@ -35,11 +35,11 @@ import play.mvc.Scope.Session;
 public class RecommendationEngine extends Controller{
 
 	public static void index() {
-		//Application.generateFeeds();
-		//LikeGroup.generateLikeGroupsFromStaticArray();
+		Application.generateFeeds();
+		LikeGroup.generateLikeGroupsFromStaticArray();
 		
 		Application.getUserLikes();
-		//RSSEngine.fetchNews();
+		RSSEngine.fetchNews();
     	Topic topic1 = fetchTopic(0);
     	Topic topic2 = fetchTopic(1);
  
