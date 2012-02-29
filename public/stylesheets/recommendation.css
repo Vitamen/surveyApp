@@ -18,6 +18,17 @@
 	border: hidden
 	border-radius: 5px;
 }
+.logoutButton{
+	margin-top:300px;
+	width:60px;
+	float:right;
+}
+
+.logoutButton button{
+	background-color: #3B5998;
+	color: #ffffff;
+	float:right;
+}
 
 .topic a {
 	display: block;

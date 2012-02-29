@@ -75,12 +75,13 @@ public class Application extends Controller {
 	
     public static void index() {
     	generateFeeds();
-    	String currentUser = Session.current().get("user");
+    	/*String currentUser = Session.current().get("user");
     	if (currentUser != null) {
     		RecommendationEngine.index();
     	} else {
     		render();
-    	}
+    	}*/
+    	render();
     }
 
     public static boolean getUserLikes(){
@@ -136,7 +137,9 @@ public class Application extends Controller {
     	System.out.println("Logging out");
         Session.current().remove("username");
         FbGraph.destroySession();
-        index();
+        System.out.println("FACEBOOK LOGOUT BEING HIT");
+        Application.index();
+        render();
     }
 
     public static void login(String username, String password){
@@ -182,12 +185,13 @@ public class Application extends Controller {
     	renderJSON(article.toString());
     }
     
-    public static void getRSSFeeds(String userName){
+    public static void getRSSFeeds(String userId){
     	try {
+    		System.out.println("User ID which can't be null is "+ userId);
     		//System.out.println("\n\n\n\n\nTrying to Work\n\n\n\n");
-			JsonObject user = FbGraph.getObject(userName, Parameter.with("access_token", "BAAFTZB1ThIZBQBACYExOvxBc569YgOr8YtjiETSbq8BkG6wnqegV2U8wCrEZBihZAGsU2h2wZBogtwTOAH5ZAb8QMY6qi6sHhviEHWHpIWjCxFFpHEdq0XOegD3LCNI4KMqrqwcjmCEwZDZD").parameters());
+			JsonObject user = FbGraph.getObject(userId, Parameter.with("access_token", "BAAFTZB1ThIZBQBACYExOvxBc569YgOr8YtjiETSbq8BkG6wnqegV2U8wCrEZBihZAGsU2h2wZBogtwTOAH5ZAb8QMY6qi6sHhviEHWHpIWjCxFFpHEdq0XOegD3LCNI4KMqrqwcjmCEwZDZD").parameters());
 			if (user!=null){
-				System.out.println("User: "+ user.get("username").toString());
+				System.out.println("User: "+ user.get("name").toString());
 			}
 			else
 				System.out.println("User not being created");
@@ -195,6 +199,7 @@ public class Application extends Controller {
 			System.out.println("There was an error in the getUserInformationMethod");
 			e.printStackTrace();
 		}
+    	
     	JsonObject obj = new JsonObject();
     	obj.addProperty("test", "Is Extracting");
     	

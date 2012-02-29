@@ -2,6 +2,7 @@
 #{set title:'Home' /}
 #{fbg.scriptAsync /}
 
+
 <link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/recommendation.css'}" />
 <div class = "container">
 <div id="question"><h3>Which topic can you picture yourself having a conversation with?</h3></div>
@@ -19,14 +20,10 @@
 			int index = newContent.indexOf("<");
 			while(index >=0)
 			{
-				System.out.println("Starting index" + index);
 				int endIndex = newContent.indexOf(">", index);
-				System.out.println("Ending index" + index);		
 				newContent = newContent.delete(index, endIndex+1);
-				System.out.println("Length of Content"+newContent.length());
 				index = newContent.indexOf("<");
 			}
-			System.out.println("Out of the loop");
 			String finalContent = newContent.toString();
 		}%
 		<div class="topic-title">${topic.title}</div>
@@ -48,14 +45,10 @@
 			int index2 = newContent2.indexOf("<");
 			while(index2 >=0)
 			{
-				System.out.println("Starting index" + index2);
 				int endIndex2 = newContent2.indexOf(">", index2);
-				System.out.println("Ending index" + index2);		
 				newContent2 = newContent2.delete(index2, endIndex2+1);
-				System.out.println("Length of Content"+newContent2.length());
 				index2 = newContent2.indexOf("<");
 			}
-			System.out.println("Out of the loop");
 			String finalContent2 = newContent2.toString();
 		}%
 		<div class="topic-title">${topic.title}</div>
@@ -63,6 +56,15 @@
 		<div class="topic-description">${finalContent2}</div>
 		</a>
 		</div>
-		
+		<script type="text/javascript">
+	    function facebookLogoutNow() {
+	          window.location = "@{Application.facebookLogout()}";
+	    }
+	</script>	
 </div>
+
+<div class="logoutButton">
+	<button type="button" onclick="facebookLogoutNow()">Logout</button>
+</div>
+	
 
