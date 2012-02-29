@@ -3,33 +3,66 @@
 #{fbg.scriptAsync /}
 
 <link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/recommendation.css'}" />
-
-<div id="question">Which topic can you picture yourself having a conversation with?</div>
+<div class = "container">
+<div id="question"><h3>Which topic can you picture yourself having a conversation with?</h3></div>
 <form name="choice1Form" action="/submitChoice" id="submitChoice" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
 <input type="hidden" name="choiceId" value="${choice.id}" />
 <input type="hidden" name="selection" value="0" />
 </form>
 <a href="#" onclick="document.forms['choice1Form'].submit(); return false;">
-<div id="topic-1" class="topic">
-%{
-	topic = choice.recommendations.get(0).topic
-}%
-<div class="topic-title">${topic.title}</div>
-<div class="topic-description">${topic.description}</div>
-</a>
-</div>
+	<div id ="wrapper" width="940px">
+		<div id="topic-1" class="topic">
+		%{
+			topic = choice.recommendations.get(0).topic
+			String topicNoLinks = topic.description;
+			StringBuffer newContent = new StringBuffer(topicNoLinks);
+			int index = newContent.indexOf("<");
+			while(index >=0)
+			{
+				System.out.println("Starting index" + index);
+				int endIndex = newContent.indexOf(">", index);
+				System.out.println("Ending index" + index);		
+				newContent = newContent.delete(index, endIndex+1);
+				System.out.println("Length of Content"+newContent.length());
+				index = newContent.indexOf("<");
+			}
+			System.out.println("Out of the loop");
+			String finalContent = newContent.toString();
+		}%
+		<div class="topic-title">${topic.title}</div>
+		<br/>		
+		<div class="topic-description">${finalContent}</div>
+		</a>
+		</div>
 
 <form name="choice2Form" action="/submitChoice" id="submitChoice" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
 <input type="hidden" name="choiceId" value="${choice.id}" />
 <input type="hidden" name="selection" value="1" />
 </form>
 <a href="#" onclick="document.forms['choice2Form'].submit(); return false;">
-<div id="topic-2" class="topic">
-%{
-	topic = choice.recommendations.get(1).topic
-}%
-<div class="topic-title">${topic.title}</div>
-<div class="topic-description">${topic.description}</div>
-</a>
+		<div id="topic-2" class="topic">
+		%{
+			topic = choice.recommendations.get(1).topic
+			String topicNoLinks2 = topic.description;
+			StringBuffer newContent2 = new StringBuffer(topicNoLinks2);
+			int index2 = newContent2.indexOf("<");
+			while(index2 >=0)
+			{
+				System.out.println("Starting index" + index2);
+				int endIndex2 = newContent2.indexOf(">", index2);
+				System.out.println("Ending index" + index2);		
+				newContent2 = newContent2.delete(index2, endIndex2+1);
+				System.out.println("Length of Content"+newContent2.length());
+				index2 = newContent2.indexOf("<");
+			}
+			System.out.println("Out of the loop");
+			String finalContent2 = newContent2.toString();
+		}%
+		<div class="topic-title">${topic.title}</div>
+		<br/>
+		<div class="topic-description">${finalContent2}</div>
+		</a>
+		</div>
+		
 </div>
 

@@ -78,7 +78,7 @@ public class RecommendationEngine extends Controller{
     	
     	String tag;
     	if (seed == 0) {
-    		tag = "Entertainment";
+    		tag = "Technology";
     	} else {
     		tag = "Fashion";
     	}
@@ -109,7 +109,6 @@ public class RecommendationEngine extends Controller{
     		System.out.println("ERROR: Could not find choice with id "+choiceId);
     		return;
     	}
-    	
     	choice.selection = selection;
     	index();
     }

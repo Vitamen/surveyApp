@@ -198,6 +198,8 @@ public class Application extends Controller {
     	JsonObject obj = new JsonObject();
     	obj.addProperty("test", "Is Extracting");
     	
+    	//SOmething needs to happen here so that relevant articles are created
+    	
     	
     	JsonObject article = new JsonObject();
     	article.addProperty("Heading1", "Microsoft To Replace “Live” Branding With “Microsoft Account” In Windows 8");
