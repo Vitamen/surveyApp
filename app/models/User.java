@@ -52,6 +52,10 @@ public class User extends Model{
 			{
 				JsonObject tempJsonObject = (JsonObject)allLikes.get(i);
 				String category = LikeGroup.getLikeGroupFromCategory(tempJsonObject.get("category").toString().replaceAll("\"", ""));
+				if (category.compareToIgnoreCase("Unknown") == 0) {
+					continue;
+				}
+				
 				String name = tempJsonObject.get("name").toString().replaceAll("\"", "");
 				String id = tempJsonObject.get("id").toString().replaceAll("\"", "");
 				System.out.println(tempJsonObject.get("category").toString());

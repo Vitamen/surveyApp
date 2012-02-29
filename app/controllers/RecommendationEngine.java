@@ -109,8 +109,7 @@ public class RecommendationEngine extends Controller{
 			System.out.println("ERROR: Could not find user in session.");
 			return null;
 		}
-		
-		System.out.println("The number "+ seed+ " most common liked topic is "+tag);
+
     	List<Topic> topics = Topic.find("select t from Topic t join t.tags as tag where tag = ?", tag).fetch();
    
     	/* If no topic is found, return a generic result */

@@ -99,8 +99,8 @@ public class Application extends Controller {
     		return false;
     	}
     	try {
-    		String userName = user.userName;
-    		StringBuffer queryPart = new StringBuffer(userName+"/likes");
+    		String userId = user.userId;
+    		StringBuffer queryPart = new StringBuffer(userId+"/likes");
 			JsonArray userLikes = FbGraph.getConnection(queryPart.toString(), Parameter.with("limit", "1000").parameters());
 			
 			user.addAllLikes(userLikes);

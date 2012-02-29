@@ -89,11 +89,13 @@ public class LikeGroup extends Model{
 	}
 	
 	public static String getLikeGroupFromCategory(String category) {
-		System.out.println("finding : "+ category);
 		LikeGroup likeGroup = LikeGroup.find("byLikeCategory", category).first();
-		System.out.println("and found: "+likeGroup);
-		String group = null;
 		
+		if (likeGroup == null) {
+			likeGroup = LikeGroup.find("byLikeGroup", category).first();
+		}
+
+		String group = null;
 		if (likeGroup == null) {
 			System.out.println("System does not recognize the type "+category+". Please enter category for this type");
 			Scanner scanner = new Scanner(System.in);

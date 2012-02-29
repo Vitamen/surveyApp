@@ -31,5 +31,9 @@ public class AnalysisEngine extends Controller {
 		List<Choice> choicesTwo = Choice.find("SELECT DISTINCT c " +
 				"FROM Choice c JOIN c.recommendations r WHERE " +
 				"? MEMBER OF r.reasons", reasonTwo).fetch();
+		
+		renderArgs.put("choiceOne", choicesOne.size());
+		renderArgs.put("choiceTwo", choicesTwo.size());
+		renderTemplate("Analysis/index.html");
 	}
 }
