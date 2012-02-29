@@ -18,6 +18,7 @@ import com.sun.cnpi.rss.parser.RssParserException;
 import com.sun.cnpi.rss.parser.RssParserFactory;
 
 import models.Choice;
+import models.Feed;
 import models.LikeFrequency;
 import models.LikeFrequencyComparator;
 import models.LikeGroup;
@@ -74,8 +75,7 @@ public class RecommendationEngine extends Controller{
     
     public static Topic fetchTopic(int seed) {
     	JsonObject profile;
-    	
-    	User user = User.find("byUserId", Session.current().get("user")).first();
+    
     	String tag;
     	if (seed == 0) {
     		tag = "Technology";
@@ -83,7 +83,21 @@ public class RecommendationEngine extends Controller{
     		tag = "Fashion";
     	}
     	
+    	if (LikeGroup.count() == 0) {
+    		LikeGroup.generateLikeGroupsFromStaticArray();
+    	}
+    	
+    	if (Feed.count() == 0) {
+    		Application.generateFeeds();
+    		RSSEngine.fetchNews();
+    	}
+    	
+    	User user = User.find("byUserId", Session.current().get("user")).first();
+    	
 		if (user != null) {
+			if (user.frequencyOfLikes == null || user.frequencyOfLikes.size() == 0) {
+				Application.getUserLikes();
+			}
 			List<LikeFrequency> likeFrequencies = user.frequencyOfLikes;
 			Collections.sort(likeFrequencies, new LikeFrequencyComparator());
 			LikeFrequency lf;
@@ -91,6 +105,9 @@ public class RecommendationEngine extends Controller{
 				lf = likeFrequencies.get(seed);
 				tag = LikeGroup.getLikeGroupFromCategory(lf.likeCategory);
 			}
+		} else {
+			System.out.println("ERROR: Could not find user in session.");
+			return null;
 		}
 		
 		System.out.println("The number "+ seed+ " most common liked topic is "+tag);
@@ -98,6 +115,7 @@ public class RecommendationEngine extends Controller{
    
     	/* If no topic is found, return a generic result */
     	if (topics == null || topics.size() == 0) {
+    		System.out.println("ERROR: We found no topics! Going to generic search results");
     		topics =  Topic.find("select t from Topic t join t.tags as tag where tag = ?", "Generic").fetch();
     	}
     	return topics.get(0);
