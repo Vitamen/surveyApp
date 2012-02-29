@@ -37,11 +37,12 @@ public class RecommendationEngine extends Controller{
 
 	public static void index() {
 		/* Set up stuff */
+		/*
 		LikeGroup.generateLikeGroupsFromStaticArray();
 		Application.generateFeeds();
 		Application.getUserLikes();
-		RSSEngine.fetchNews();
-		
+		RSSEngine.fetchNews();*/
+		/*
     	Topic topic1 = fetchTopic(0);
     	Topic topic2 = fetchTopic(1);
  
@@ -59,7 +60,8 @@ public class RecommendationEngine extends Controller{
     	choice.addRecommendation(rec2);
     	choice.save();
     	
-    	renderArgs.put("choice", choice);
+    	renderArgs.put("choice", choice);*/
+		renderArgs.put("choice", genericVsCalculatedChoice());
     	renderTemplate("Recommendation/index.html");
 	}
 	
@@ -70,6 +72,46 @@ public class RecommendationEngine extends Controller{
 	
 	public static Choice getChoice(int numRecommendations) {
 		Choice choice = new Choice();
+		return choice;
+	}
+	
+	public static Choice genericVsCalculatedChoice() {
+		Topic topic1 = (Topic) Topic.find("select t from Topic t join t.tags as tag where tag = ?", "Generic").fetch().get(0);
+		
+		User user = User.find("byUserId", Session.current().get("user")).first();
+    	String tag = "Generic";
+		if (user != null) {
+			if (user.frequencyOfLikes == null || user.frequencyOfLikes.size() == 0) {
+				Application.getUserLikes();
+			}
+			List<LikeFrequency> likeFrequencies = user.frequencyOfLikes;
+			Collections.sort(likeFrequencies, new LikeFrequencyComparator());
+			LikeFrequency lf;
+			if (likeFrequencies.size() > 0) {
+				lf = likeFrequencies.get(0);
+				tag = LikeGroup.getLikeGroupFromCategory(lf.likeCategory);
+			}
+		} else {
+			System.out.println("ERROR: Could not find user in session.");
+			return null;
+		}
+		Topic topic2 = (Topic) Topic.find("select t from Topic t join t.tags as tag where tag = ?", tag).fetch().get(0);
+		
+		Recommendation rec1 = new Recommendation(topic1);
+    	Reason genericReason = Reason.getCategoryReason(Reason.GENERIC);
+    	rec1.addReason(genericReason);
+    	rec1.save();
+    	
+    	Recommendation rec2 = new Recommendation(topic2);
+    	Reason likeCategoryReason = Reason.getCategoryReason(Reason.LIKE);
+    	rec2.addReason(likeCategoryReason);
+    	rec2.save();
+    	
+    	Choice choice = new Choice();
+    	choice.addRecommendation(rec1);
+    	choice.addRecommendation(rec2);
+    	choice.save();
+		
 		return choice;
 	}
     
@@ -124,11 +166,13 @@ public class RecommendationEngine extends Controller{
     /* Response */
     public static void processChoice(long choiceId, int selection) {
     	Choice choice = Choice.findById(choiceId);
+    	System.out.println(choice+" "+selection);
     	if (choice == null) {
     		System.out.println("ERROR: Could not find choice with id "+choiceId);
-    		return;
+    		index();
     	}
     	choice.selection = selection;
+    	choice.save();
     	index();
     }
 }

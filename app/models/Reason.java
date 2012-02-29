@@ -14,6 +14,8 @@ public class Reason extends Model{
 	public static final int CHECKIN = 1<<2;
 	public static final int SUBSCRIPTION = 1<<4;
 	public static final int GROUP = 1<<6;
+	
+	public static final int GENERIC = 1<<3;
 
 	public static final int SOLO = 1;
 	public static final int MUTUAL = 1<<1;
@@ -23,6 +25,18 @@ public class Reason extends Model{
 
 	public int type;
 	public boolean isCategory;
+	
+	public static Reason getReasonWithType(int type) {
+		Reason reason = Reason.find("byType", type).first();
+		if (reason == null) {
+			reason = new Reason();
+			reason.type = type;
+			reason.isCategory = false;
+			reason.save();
+		}
+		
+		return reason;
+	}
 	
 	public static Reason getLikeCategoryReason() {
 		Reason reason = Reason.find("byTypeAndIsCategory", LIKE, true).first();

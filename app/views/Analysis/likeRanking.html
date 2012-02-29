@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>#{get 'title' /}</title>
+       <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/bootstrap/css/bootstrap-responsive.css'}">
+    	<link rel="stylesheet" media="screen" href="@{'/public/stylesheets/bootstrap/css/bootstrap.css'}">
+        #{get 'moreStyles' /}
+        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
+        <script src="@{'/public/javascripts/jquery-1.5.2.min.js'}" type="text/javascript" charset="UTF-8"></script>
+        <script src="@{'/public/javascripts/highcharts.js'}" type="text/javascript" charset="UTF-8"></script>
+		<script src="@{'/public/javascripts/exporting.js'}" type="text/javascript" charset="UTF-8"></script>
+		<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/main.css'}" />
+        #{get 'moreScripts' /}
+    </head>
+    <body>
+    	<div class = "container">
+    		<h1>Conversationalist</h1>
+    	</div>
+    	
+		<input type="hidden" name="preferred" value="${preferred}"></input>	
+			There were ${preferred} choices involving the first choice.
+			There were ${total} total choices involving the second choice;
+    	<div id="graph-container" style="min-width: 400px; height: 400px; margin: 0 auto">
+			
+		</div>
+		<hr/>
+        
+		<script src="@{'/public/javascripts/likeRanking.js'}" type="text/javascript" charset="UTF-8"></script>
+        
+    </body>
+</html>
+
+		
+		
