@@ -5,8 +5,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -42,39 +44,18 @@ public class RecommendationEngine extends Controller{
 		Application.generateFeeds();
 		Application.getUserLikes();
 		RSSEngine.fetchNews();*/
-		/*
-    	Topic topic1 = fetchTopic(0);
-    	Topic topic2 = fetchTopic(1);
- 
-    	Recommendation rec1 = new Recommendation(topic1);
-    	Reason likeCategoryReason = Reason.getLikeCategoryReason();
-    	rec1.addReason(likeCategoryReason);
-    	rec1.save();
-    	
-    	Recommendation rec2 = new Recommendation(topic2);
-    	rec2.addReason(likeCategoryReason);
-    	rec2.save();
-    	
-    	Choice choice = new Choice();
-    	choice.addRecommendation(rec1);
-    	choice.addRecommendation(rec2);
-    	choice.save();
-    	
-    	renderArgs.put("choice", choice);*/
-		renderArgs.put("choice", genericVsCalculatedChoice());
+		Date date = new Date();
+		Random random = new Random(date.getTime());
+		int i = random.nextInt(2);
+		if (i == 0) {
+			renderArgs.put("choice", likeRankingChoice());
+		} else {
+			renderArgs.put("choice", genericVsCalculatedChoice());
+		}
     	renderTemplate("Recommendation/index.html");
 	}
 	
 	/* Choice Generation */
-	public static Choice getChoice() {
-		return getChoice(2);
-	}
-	
-	public static Choice getChoice(int numRecommendations) {
-		Choice choice = new Choice();
-		return choice;
-	}
-	
 	public static Choice genericVsCalculatedChoice() {
 		Topic topic1 = (Topic) Topic.find("select t from Topic t join t.tags as tag where tag = ?", "Generic").fetch().get(0);
 		
@@ -113,6 +94,27 @@ public class RecommendationEngine extends Controller{
     	choice.save();
 		
 		return choice;
+	}
+	
+	public static Choice likeRankingChoice() {
+		Topic topic1 = fetchTopic(0);
+    	Topic topic2 = fetchTopic(1);
+ 
+    	Recommendation rec1 = new Recommendation(topic1);
+    	Reason likeCategoryReason = Reason.getLikeCategoryReason();
+    	rec1.addReason(likeCategoryReason);
+    	rec1.save();
+    	
+    	Recommendation rec2 = new Recommendation(topic2);
+    	rec2.addReason(likeCategoryReason);
+    	rec2.save();
+    	
+    	Choice choice = new Choice();
+    	choice.addRecommendation(rec1);
+    	choice.addRecommendation(rec2);
+    	choice.save();
+    	
+    	return choice;
 	}
     
     public static Topic fetchTopic(int seed) {
