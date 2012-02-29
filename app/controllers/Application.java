@@ -6,6 +6,7 @@ import play.modules.facebook.FbGraphException;
 import play.modules.facebook.Parameter;
 import play.mvc.*;
 import play.mvc.Scope.Session;
+import play.test.Fixtures;
 
 import java.util.*;
 
@@ -30,7 +31,6 @@ public class Application extends Controller {
 		"http://rss.cnn.com/rss/cnn_showbiz.rss",
 		"http://www.mtv.com/rss/news/news_full.jhtml",
 		"http://feeds.ew.com/entertainmentweekly/music",
-		"http://rss.ew.com/web/ew/rss/media/movies/index.xml",
 		"http://www.mtv.com/rss/news/movies_full.jhtml",
 		"http://feeds.ew.com/entertainmentweekly/books",
 		
@@ -47,6 +47,8 @@ public class Application extends Controller {
 		"http://news.yahoo.com/rss/",
 		"http://feeds.cbsnews.com/CBSNewsMain",
 		"http://feeds.feedburner.com/EducationWeekCurriculumAndLearning",
+		"http://feeds.eonline.com/eonline/celebnews",
+		"http://rss.firstshowing.net/firstshowing"
 	};
 	public static String[] feedCategories = {"Technology", 
 		"Local",
@@ -63,7 +65,6 @@ public class Application extends Controller {
 		"Entertainment",
 		"Music",
 		"Movies",
-		"Movies",
 		"Books",
 		
 		"Technology",
@@ -78,7 +79,9 @@ public class Application extends Controller {
 		
 		"Generic",
 		"Generic",
-		"Education"
+		"Education",
+		"Celebrities",
+		"Movies"
 		};
 	
     public static void index() {

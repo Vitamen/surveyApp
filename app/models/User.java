@@ -55,16 +55,17 @@ public class User extends Model{
 				if (category.compareToIgnoreCase("Unknown") == 0) {
 					continue;
 				}
-				
+
 				String name = tempJsonObject.get("name").toString().replaceAll("\"", "");
 				String id = tempJsonObject.get("id").toString().replaceAll("\"", "");
-				System.out.println(tempJsonObject.get("category").toString());
+				
 				Likes tempLike = new Likes(name, category, id);
 				addLike(tempLike);
+
 				String likeCategory = tempLike.category;
 				if (userLikesToFrequency.containsKey(likeCategory)){
 					int freq = userLikesToFrequency.get(likeCategory);
-					userLikesToFrequency.put(likeCategory, freq++);
+					userLikesToFrequency.put(likeCategory, ++freq);
 				}
 				else{
 					userLikesToFrequency.put(likeCategory, 1);
