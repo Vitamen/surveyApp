@@ -1,0 +1,51 @@
+* {
+	font-family: Georgia, "Times New Roman";
+	width:100%;
+}
+
+.container {
+  width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+  *zoom: 1;
+}
+
+.topic {
+	margin-top: 10px;
+	display: inline-block;
+	width: 45%;
+	padding: 10px;
+	border: hidden
+	border-radius: 5px;
+}
+
+.topic a {
+	display: block;
+    height: 100%;
+    width: 100%;
+    text-decoration: none;
+}
+
+.topic-title {
+	text-align: center;
+	font-size: 14px;
+	font-weight: bold;
+	color:#333333;
+}
+.topic description{
+	text-align: left;
+	font-size: 12px;
+}
+
+
+#question {
+	text-align: center;
+}
+#topic-1 {
+	float:left;
+	background-color:#D5D5D5;
+}
+#topic-2 {
+	float:right;
+	background-color:#D5D5D5;
+}
