@@ -81,6 +81,8 @@ public class RSSEngine {
 			                topic.description = description;
 			                topic.tags.addAll(feed.tags);
 			                topic.save();
+		                } else {
+		                	break;
 		                }
 	            	} catch (NullPointerException npe) {
 	            		continue;
@@ -89,6 +91,7 @@ public class RSSEngine {
 					}
 	            }
 	            feed.lastUpdate = recentUpdate;
+	            feed.save();
 	        }
 		} catch (RssParserException e) {
 			e.printStackTrace();

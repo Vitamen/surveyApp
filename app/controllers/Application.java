@@ -42,7 +42,11 @@ public class Application extends Controller {
 		"http://news.yahoo.com/fashion/",
 		"http://feeds.nytimes.com/nyt/rss/FashionandStyle",
 		"http://www.wwd.com/rss/2/news/fashion",
-		"http://feeds.feedburner.com/epicurious/epiblog"
+		"http://feeds.feedburner.com/epicurious/epiblog",
+		
+		"http://news.yahoo.com/rss/",
+		"http://feeds.cbsnews.com/CBSNewsMain",
+		"http://feeds.feedburner.com/EducationWeekCurriculumAndLearning",
 	};
 	public static String[] feedCategories = {"Technology", 
 		"Local",
@@ -70,31 +74,36 @@ public class Application extends Controller {
 		"Fashion",
 		"Fashion",
 		"Fashion",
-		"Food"
+		"Food",
+		
+		"Generic",
+		"Generic",
+		"Education"
 		};
 	
     public static void index() {
-    	generateFeeds();
-    	/*String currentUser = Session.current().get("user");
-    	if (currentUser != null) {
+    	//generateFeeds();
+    	String currentUser = Session.current().get("user");
+    	User user = User.find("byUserId", currentUser).first();
+    	if (user != null) {
     		RecommendationEngine.index();
     	} else {
     		render();
-    	}*/
+    	}
     	render();
     }
 
     public static boolean getUserLikes(){
-    	User loggedInUser = User.findById(Long.parseLong(Session.current().get("user"))); 
-    	if (loggedInUser == null) {
+    	User user = User.find("byUserId", Session.current().get("user")).first(); 
+    	if (user == null) {
     		return false;
     	}
     	try {
-    		String userName = loggedInUser.userName;
+    		String userName = user.userName;
     		StringBuffer queryPart = new StringBuffer(userName+"/likes");
 			JsonArray userLikes = FbGraph.getConnection(queryPart.toString(), Parameter.with("limit", "1000").parameters());
 			
-			loggedInUser.addAllLikes(userLikes);
+			user.addAllLikes(userLikes);
     	} catch (FbGraphException e) {
 			e.printStackTrace();
 		}
@@ -102,7 +111,6 @@ public class Application extends Controller {
     }
     
     public static void displayFriends(){
-    	//Get User Likes
     	getUserLikes();
     	render();
     }
@@ -120,8 +128,8 @@ public class Application extends Controller {
             } else {
             	user = userList.get(0);
             }
-            
-            Session.current().put("user", user.id);
+
+            Session.current().put("user", user.userId);
             // do useful things
             Session.current().put("username", "xxx"); // put the email into the session (for the Secure module)
         } catch (FbGraphException fbge) {

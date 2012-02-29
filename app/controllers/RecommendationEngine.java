@@ -35,11 +35,12 @@ import play.mvc.Scope.Session;
 public class RecommendationEngine extends Controller{
 
 	public static void index() {
-		Application.generateFeeds();
+		/* Set up stuff */
 		LikeGroup.generateLikeGroupsFromStaticArray();
-		
+		Application.generateFeeds();
 		Application.getUserLikes();
 		RSSEngine.fetchNews();
+		
     	Topic topic1 = fetchTopic(0);
     	Topic topic2 = fetchTopic(1);
  
@@ -74,8 +75,7 @@ public class RecommendationEngine extends Controller{
     public static Topic fetchTopic(int seed) {
     	JsonObject profile;
     	
-    	User user = User.findById(Long.parseLong(Session.current().get("user")));
-    	
+    	User user = User.find("byUserId", Session.current().get("user")).first();
     	String tag;
     	if (seed == 0) {
     		tag = "Technology";
@@ -93,10 +93,12 @@ public class RecommendationEngine extends Controller{
 			}
 		}
 		
+		System.out.println("The number "+ seed+ " most common liked topic is "+tag);
     	List<Topic> topics = Topic.find("select t from Topic t join t.tags as tag where tag = ?", tag).fetch();
    
+    	/* If no topic is found, return a generic result */
     	if (topics == null || topics.size() == 0) {
-    		return null;
+    		topics =  Topic.find("select t from Topic t join t.tags as tag where tag = ?", "Generic").fetch();
     	}
     	return topics.get(0);
     }

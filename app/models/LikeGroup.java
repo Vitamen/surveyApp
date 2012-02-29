@@ -40,7 +40,8 @@ public class LikeGroup extends Model{
 			
 			"Food/beverages",
 			"School sports team",
-			"University"
+			"University",
+			"Community"
 			};
 	public static String[] groups = {
 			"Travel",
@@ -67,22 +68,30 @@ public class LikeGroup extends Model{
 			
 			"Food",
 			"Sports",
-			"Education"
+			"Education",
+			"Local"
 			};
 	public static void generateLikeGroupsFromStaticArray() {
 		for (int i = 0; i < categories.length; i++) {
+			System.out.println("setting up "+categories[i]);
 			LikeGroup lg = LikeGroup.find("byLikeCategory", categories[i]).first();
+
+			System.out.println(lg);
 			if (lg == null) {
 				lg = new LikeGroup();
 				lg.likeCategory = categories[i];
 				lg.likeGroup = groups[i];
 				lg.save();
 			}
+			System.out.println("now like has category "+lg.likeCategory+" and group "+lg.likeGroup);
+			System.out.println("and find: "+LikeGroup.find("byLikeCategory", lg.likeCategory).first());
 		}
 	}
 	
 	public static String getLikeGroupFromCategory(String category) {
+		System.out.println("finding : "+ category);
 		LikeGroup likeGroup = LikeGroup.find("byLikeCategory", category).first();
+		System.out.println("and found: "+likeGroup);
 		String group = null;
 		
 		if (likeGroup == null) {
