@@ -101,8 +101,14 @@ public class Application extends Controller {
     	try {
     		String userId = user.userId;
     		StringBuffer queryPart = new StringBuffer(userId+"/likes");
+<<<<<<< Updated upstream
 			JsonArray userLikes = FbGraph.getConnection(queryPart.toString(), Parameter.with("limit", "1000").parameters());
 			
+=======
+			//JsonArray userLikes = FbGraph.getConnection(queryPart.toString(), Parameter.with("limit", "1000").parameters());
+    		JsonArray userLikes = FbGraph.getConnection(queryPart.toString(), Parameter.with("access_token", "BAAFTZB1ThIZBQBACYExOvxBc569YgOr8YtjiETSbq8BkG6wnqegV2U8wCrEZBihZAGsU2h2wZBogtwTOAH5ZAb8QMY6qi6sHhviEHWHpIWjCxFFpHEdq0XOegD3LCNI4KMqrqwcjmCEwZDZD").parameters());
+    		System.out.println("User LIkes JSON Array size"+userLikes.size());
+>>>>>>> Stashed changes
 			user.addAllLikes(userLikes);
     	} catch (FbGraphException e) {
 			e.printStackTrace();

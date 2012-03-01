@@ -95,15 +95,18 @@ public class RecommendationEngine extends Controller{
     	User user = User.find("byUserId", Session.current().get("user")).first();
     	
 		if (user != null) {
+			System.out.println("Got a user :"+user);
 			if (user.frequencyOfLikes == null || user.frequencyOfLikes.size() == 0) {
 				Application.getUserLikes();
 			}
 			List<LikeFrequency> likeFrequencies = user.frequencyOfLikes;
 			Collections.sort(likeFrequencies, new LikeFrequencyComparator());
 			LikeFrequency lf;
+			System.out.println("Found "+likeFrequencies.size()+" Likes");
 			if (likeFrequencies.size() > seed) {
 				lf = likeFrequencies.get(seed);
 				tag = LikeGroup.getLikeGroupFromCategory(lf.likeCategory);
+				System.out.println("Setting tag to "+tag);
 			}
 		} else {
 			System.out.println("ERROR: Could not find user in session.");
