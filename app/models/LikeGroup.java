@@ -41,11 +41,17 @@ public class LikeGroup extends Model{
 			"Food/beverages",
 			"School sports team",
 			"University",
-			"Community"
+			"Community",
+			"Website",
+			"Public figure",
+			"Product/service",
+			"Company",
+			"App",
+			"Application"
 			};
 	public static String[] groups = {
 			"Travel",
-			"Movie",
+			"Movies",
 			"Music",
 			"Technology",
 			"Fashion",
@@ -69,7 +75,13 @@ public class LikeGroup extends Model{
 			"Food",
 			"Sports",
 			"Education",
-			"Local"
+			"Local",
+			"Technology",
+			"Celebrities",
+			"Unknown",
+			"Unknown",
+			"Unknown",
+			"Unknown"
 			};
 	public static void generateLikeGroupsFromStaticArray() {
 		for (int i = 0; i < categories.length; i++) {

@@ -14,11 +14,18 @@ public class Feed extends Model {
 	@ElementCollection
 	public List<String> tags;
 	
+	public String name;
 	public String link;
 	public Date lastUpdate;
 	
 	public Feed(String fl) {
 		link = fl;
 		tags = new ArrayList<String> ();
+	}
+	
+	public boolean equals(Object obj) {
+		Feed feed = (Feed) obj;
+		
+		return this.link.compareToIgnoreCase(feed.link) == 0;
 	}
 }

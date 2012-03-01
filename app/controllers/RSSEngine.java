@@ -80,6 +80,7 @@ public class RSSEngine {
 			                topic.link = link;
 			                topic.description = description;
 			                topic.tags.addAll(feed.tags);
+			                topic.feed = feed;
 			                topic.save();
 		                } else {
 		                	break;

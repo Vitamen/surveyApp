@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>#{get 'title' /}</title>
+       <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/bootstrap/css/bootstrap-responsive.css'}">
+    	<link rel="stylesheet" media="screen" href="@{'/public/stylesheets/bootstrap/css/bootstrap.css'}">
+        #{get 'moreStyles' /}
+        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
+        <script src="@{'/public/javascripts/jquery-1.5.2.min.js'}" type="text/javascript" charset="UTF-8"></script>
+        <script src="@{'/public/javascripts/highcharts.js'}" type="text/javascript" charset="UTF-8"></script>
+		<script src="@{'/public/javascripts/exporting.js'}" type="text/javascript" charset="UTF-8"></script>
+		<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/main.css'}" />
+		<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/recommendation.css'}" />
+		<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/charts.css'}" />
+        #{get 'moreScripts' /}
+    </head>
+    <body>
+    	<div class = "container">
+    		<h1>Conversationalist:Analysis Panel</h1>
+    	</div>
+    	<div id="preferred" value="${preferred}"></div>
+    	<div id="total" value="${total}"></div>
+		#{list items:feed_map, as:'feed'}
+		    <div id="feed_name_${feed_index}" value=${feed.key}></div>
+		    <div id="feed_frequency_${feed_index}" value=${feed.value}></div>
+		#{/list}
+    	<div id="generic_calculated" value="${generic_calculated}"></div>
+    	<div id="generic_total" value="${generic_total}"></div>
+    	
+    	<div id="likeranking-container" style="width: 600px; height: 400px;">
+		</div>
+		
+		<div id="genericranking-container" style="width: 600px; height: 400px;">
+		</div>
+		
+    	<div id="feedranking-container" style="width: 600px; height: 400px;">
+    	</div>
+		
+		<hr/>
+        
+		<script src="@{'/public/javascripts/likeRanking.js'}" type="text/javascript" charset="UTF-8"></script>
+        <script src="@{'/public/javascripts/feedRanking.js'}" type="text/javascript" charset="UTF-8"></script>
+        <script src="@{'/public/javascripts/genericRanking.js'}" type="text/javascript" charset="UTF-8"></script>
+        
+    </body>
+</html>
+
+		
+		
