@@ -21,7 +21,10 @@
     	</div>
     	<div id="preferred" value="${preferred}"></div>
     	<div id="total" value="${total}"></div>
-    	
+		#{list items:feed_map, as:'feed'}
+		    <div id="feed_name_${feed_index}" value=${feed.key}></div>
+		    <div id="feed_frequency_${feed_index}" value=${feed.value}></div>
+		#{/list}
     	<div id="generic_calculated" value="${generic_calculated}"></div>
     	<div id="generic_total" value="${generic_total}"></div>
     	

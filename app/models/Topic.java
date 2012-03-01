@@ -12,6 +12,9 @@ public class Topic extends Model {
 	@ElementCollection
 	public List<String> tags;
 	
+	@ManyToOne
+	public Feed feed;
+	
 	public String title;
 	
 	@Column (columnDefinition="TEXT")

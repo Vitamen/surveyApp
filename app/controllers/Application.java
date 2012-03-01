@@ -17,72 +17,7 @@ import com.google.gson.JsonObject;
 import models.*;
 
 public class Application extends Controller {
-	public static String[] feedLinks = {"http://feeds.feedburner.com/TechCrunch/", 
-		"http://www.wpxi.com/feeds/categories/news/",
-		"http://rss.cnn.com/rss/si_topstories.rss",
-		"http://feeds.feedburner.com/ChicagoBreakingSports",
-		"http://sports.espn.go.com/espn/rss/news",
-		"http://rss.cnn.com/rss/money_latest.rss",
-		"http://online.wsj.com/xml/rss/3_7014.xml",
-		"http://www.economist.com/topics/us-economy/index.xml",
-		
-		"http://rss.cnn.com/rss/cnn_allpolitics.rss",
-		"http://rss.cnn.com/rss/cnn_travel.rss",
-		"http://rss.cnn.com/rss/cnn_showbiz.rss",
-		"http://www.mtv.com/rss/news/news_full.jhtml",
-		"http://feeds.ew.com/entertainmentweekly/music",
-		"http://www.mtv.com/rss/news/movies_full.jhtml",
-		"http://feeds.ew.com/entertainmentweekly/books",
-		
-		"http://www.engadget.com/rss.xml",
-		"http://feeds.cbsnews.com/tech_talk",
-		"http://www.wpxi.com/feeds/categories/events/",
-		"http://www.wpxi.com/feeds/categories/news",
-		"http://feeds.chicagotribune.com/chicagotribune/cars/",
-		"http://news.yahoo.com/fashion/",
-		"http://feeds.nytimes.com/nyt/rss/FashionandStyle",
-		"http://www.wwd.com/rss/2/news/fashion",
-		"http://feeds.feedburner.com/epicurious/epiblog",
-		
-		"http://news.yahoo.com/rss/",
-		"http://feeds.cbsnews.com/CBSNewsMain",
-		"http://feeds.feedburner.com/EducationWeekCurriculumAndLearning",
-		"http://feeds.eonline.com/eonline/celebnews",
-		"http://rss.firstshowing.net/firstshowing"
-	};
-	public static String[] feedCategories = {"Technology", 
-		"Local",
-		"Sports",
-		"Sports",
-		"Sports",
-		"Business",
-		"Finance",
-		"Finance",
-		
-		"Politics",
-		"Travel",
-		"Entertainment",
-		"Entertainment",
-		"Music",
-		"Movies",
-		"Books",
-		
-		"Technology",
-		"Technology",
-		"Local",
-		"Local",
-		"Cars",
-		"Fashion",
-		"Fashion",
-		"Fashion",
-		"Food",
-		
-		"Generic",
-		"Generic",
-		"Education",
-		"Celebrities",
-		"Movies"
-		};
+	
 	
     public static void index() {
     	//generateFeeds();
@@ -255,9 +190,10 @@ public class Application extends Controller {
     public static boolean generateFeeds() {
     	clearAll();
     	
-    	for (int i = 0; i < feedLinks.length; i++) {
-    		Feed feed = new Feed(feedLinks[i]);
-    		feed.tags.add(feedCategories[i]);
+    	for (int i = 0; i < StaticData.feedLinks.length; i++) {
+    		Feed feed = new Feed(StaticData.feedLinks[i]);
+    		feed.tags.add(StaticData.feedCategories[i]);
+    		feed.name = StaticData.feedNames[i];
     		feed.lastUpdate = new Date(0);
     		feed.save();
     	}

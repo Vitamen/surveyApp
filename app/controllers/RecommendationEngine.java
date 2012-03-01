@@ -41,9 +41,10 @@ public class RecommendationEngine extends Controller{
 		/* Set up stuff */
 		/*
 		LikeGroup.generateLikeGroupsFromStaticArray();
-		Application.generateFeeds();
 		Application.getUserLikes();
+		Application.generateFeeds();
 		RSSEngine.fetchNews();*/
+		Session.current().put("user", 1243350056);
 		Date date = new Date();
 		Random random = new Random(date.getTime());
 		int i = random.nextInt(2);
@@ -57,7 +58,8 @@ public class RecommendationEngine extends Controller{
 	
 	/* Choice Generation */
 	public static Choice genericVsCalculatedChoice() {
-		Topic topic1 = (Topic) Topic.find("select t from Topic t join t.tags as tag where tag = ?", "Generic").fetch().get(0);
+		List<Topic> topics = Topic.find("select t from Topic t join t.tags as tag where tag = ?", "Generic").fetch();
+		Topic topic1 = getRandomTopicFrom(topics);
 		
 		User user = User.find("byUserId", Session.current().get("user")).first();
     	String tag = "Generic";
@@ -76,7 +78,9 @@ public class RecommendationEngine extends Controller{
 			System.out.println("ERROR: Could not find user in session.");
 			return null;
 		}
-		Topic topic2 = (Topic) Topic.find("select t from Topic t join t.tags as tag where tag = ?", tag).fetch().get(0);
+		
+		List<Topic> topics2 = Topic.find("select t from Topic t join t.tags as tag where tag = ?", tag).fetch();
+		Topic topic2 = getRandomTopicFrom(topics2);
 		
 		Recommendation rec1 = new Recommendation(topic1);
     	Reason genericReason = Reason.getCategoryReason(Reason.GENERIC);
@@ -155,15 +159,15 @@ public class RecommendationEngine extends Controller{
 		}
 
     	List<Topic> topics = Topic.find("select t from Topic t join t.tags as tag where tag = ?", tag).fetch();
-   
+    	
     	/* If no topic is found, return a generic result */
     	if (topics == null || topics.size() == 0) {
     		System.out.println("ERROR: We found no topics! Going to generic search results");
     		topics =  Topic.find("select t from Topic t join t.tags as tag where tag = ?", "Generic").fetch();
     	}
-    	return topics.get(0);
+
+    	return getRandomTopicFrom(topics);
     }
-    
     
     /* Response */
     public static void processChoice(long choiceId, int selection) {
@@ -176,5 +180,14 @@ public class RecommendationEngine extends Controller{
     	choice.selection = selection;
     	choice.save();
     	index();
+    }
+    
+    /* Helpers */
+    public static Topic getRandomTopicFrom(List<Topic> topics) {
+    	Date date = new Date();
+    	Random random = new Random(date.getTime());
+    	
+    	int i = random.nextInt(topics.size());
+    	return topics.get(i);
     }
 }

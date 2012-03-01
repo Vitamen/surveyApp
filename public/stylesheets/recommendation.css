@@ -19,9 +19,10 @@
 	border-radius: 5px;
 }
 .logoutButton{
-	margin-top:300px;
 	width:60px;
-	float:right;
+	position: absolute;
+	left: 1050px;
+	top:7px;
 }
 
 .logoutButton button{
