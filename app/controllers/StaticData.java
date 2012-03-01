@@ -35,6 +35,41 @@ public class StaticData {
 		"http://feeds.eonline.com/eonline/celebnews",
 		"http://rss.firstshowing.net/firstshowing"
 	};
+	
+	public static String[] feedImageUrls = {
+		"http://www.xconomy.com/wordpress/wp-content/images/2011/09/techcrunch-logo.png",
+		"http://media.cmgdigital.com/shared/media/web/site/www_wpxi_com/images/logo.png",
+		"http://www.therecapp.com/content/art/app/icons/cnn_icon.jpg",
+		"http://www.tbwe.com/pub/categoryitems/Chicago_Tribune_tn.jpg",
+		"http://eclipse.tv/channels/espn.png",
+		"http://www.therecapp.com/content/art/app/icons/cnn_icon.jpg",
+		"http://img-android.lisisoft.com/imgmic/5/3/1335-i-wsj.reader_sp.jpg",
+		"http://androiiid.com/wp-content/uploads/2011/07/bf1b1798f24732e3.png.png",
+		
+		"http://www.therecapp.com/content/art/app/icons/cnn_icon.jpg",
+		"http://www.therecapp.com/content/art/app/icons/cnn_icon.jpg",
+		"http://www.therecapp.com/content/art/app/icons/cnn_icon.jpg",
+		"http://4.bp.blogspot.com/_1O-tdjVD-u8/TRMnnyPfJKI/AAAAAAAAD7U/9uhtq50RIRc/s1600/mtv.jpg",
+		"http://static.wix.com/media/5200e1d38ea5f1f2aa6269b15776b466.wix_mp_256",
+		"http://4.bp.blogspot.com/_1O-tdjVD-u8/TRMnnyPfJKI/AAAAAAAAD7U/9uhtq50RIRc/s1600/mtv.jpg",
+		"http://static.wix.com/media/5200e1d38ea5f1f2aa6269b15776b466.wix_mp_256",
+		"http://p.xbmcaddonbrowser.com/img/icons/plugin.video.engadget.png",
+		
+		"http://microwaveadvances.com/television%20logos/cbs.png",
+		"http://media.cmgdigital.com/shared/media/web/site/www_wpxi_com/images/logo.png",
+		"http://media.cmgdigital.com/shared/media/web/site/www_wpxi_com/images/logo.png",
+		"http://www.tbwe.com/pub/categoryitems/Chicago_Tribune_tn.jpg",
+		"http://images.seroundtable.com/yahoo-slurp-1316437281.png",
+		"http://a0.twimg.com/profile_images/1488203320/skmr_256.png",
+		"http://25.media.tumblr.com/avatar_d68bd8446787_128.png",
+		"http://si3.twimg.com/profile_images/1015048338/epi-twitter-icon_reasonably_small.png",
+		
+		"http://images.seroundtable.com/yahoo-slurp-1316437281.png",
+		"http://microwaveadvances.com/television%20logos/cbs.png",
+		"http://profile.ak.fbcdn.net/hprofile-ak-snc4/41565_5887538795_5127_q.jpg",
+		"http://a2.twimg.com/profile_images/1669862831/elog_reasonably_small.jpg",
+		"http://widgets.markosweb.com/sb/new/f/i/r/firstshowing.net.gif"
+	};
 
 	public static String[] feedNames = {
 		"TechCrunch",
