@@ -129,21 +129,27 @@ public class Application extends Controller {
     }
     
     public static void getRSSFeeds(String userId) {
-    	getRSSFeeds(userId, "BAAFTZB1ThIZBQBACYExOvxBc569YgOr8YtjiETSbq8BkG6wnqegV2U8wCrEZBihZAGsU2h2wZBogtwTOAH5ZAb8QMY6qi6sHhviEHWHpIWjCxFFpHEdq0XOegD3LCNI4KMqrqwcjmCEwZDZD");
+    	System.out.println("Request for "+ userId);
+    	getRSSFeedsWithAuthToken(userId, "BAAFTZB1ThIZBQBACYExOvxBc569YgOr8YtjiETSbq8BkG6wnqegV2U8wCrEZBihZAGsU2h2wZBogtwTOAH5ZAb8QMY6qi6sHhviEHWHpIWjCxFFpHEdq0XOegD3LCNI4KMqrqwcjmCEwZDZD");
     }
     
-    public static void getRSSFeeds(String userId, String auth_token){
+    public static void getRSSFeedsWithAuthToken(String userId, String auth_token){
+    	System.out.println("here");
+    	User friend = null;
     	try {
 			JsonObject user = FbGraph.getObject(userId, Parameter.with("access_token", auth_token).parameters());
 			if (user!=null){
 				System.out.println("User: "+ user.get("name").toString());
 				String ui = user.get("id").toString().replaceAll("\"", "");
-				User friend = User.find("byUserId", ui).first();
+
+				friend = User.find("byUserId", ui).first();
+				
 				if (friend == null) {
 					friend = new User(user.get("name").toString().replaceAll("\"", ""), user.get("name").toString().replaceAll("\"", ""), ui);
 					friend.save();
 				}
 				Session.current().put("user", friend.userId);
+				friend.getLikesWithAuthToken(auth_token);
 			}
 			else {
 				System.out.println("User not being created");
@@ -162,9 +168,9 @@ public class Application extends Controller {
     	
     	
     	JsonObject article = new JsonObject();
-    	Topic topic1 = RecommendationEngine.fetchTopic(0);
-    	Topic topic2 = RecommendationEngine.fetchTopic(1);
-    	Topic topic3 = RecommendationEngine.fetchTopic(2);
+    	Topic topic1 = RecommendationEngine.fetchTopicForUser(friend, 0);
+    	Topic topic2 = RecommendationEngine.fetchTopicForUser(friend, 1);
+    	Topic topic3 = RecommendationEngine.fetchTopicForUser(friend, 2);
     	article.addProperty("Heading1", topic1.title);
     	article.addProperty("Content1", topic1.description);
     	article.addProperty("ImageTag1", topic1.feed.imageUrl);

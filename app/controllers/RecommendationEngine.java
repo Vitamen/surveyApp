@@ -3,11 +3,15 @@ package controllers;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -54,6 +58,73 @@ public class RecommendationEngine extends Controller{
 			renderArgs.put("choice", genericVsCalculatedChoice());
 		}
     	renderTemplate("Recommendation/index.html");
+	}
+	
+	public static Recommendation recommendationForFriendsWithUserIds(List<Long> userIds) {
+		List<User> people = new ArrayList<User>();
+		
+		for (int i = 0; i < userIds.size(); i++) {
+			User user = User.find("byUserId", userIds.get(i)).first();
+			people.add(user);
+		}
+		
+		return recommendationForFriends(people);
+	}
+	
+	public static Recommendation recommendationForFriends(List<User> people) {
+		String tag = LikeGroup.getLikeGroupFromCategory(findLikeIntersection(people));
+		
+    	List<Topic> topics = Topic.find("select t from Topic t join t.tags as tag where tag = ?", tag).fetch();
+    	
+    	/* If no topic is found, return a generic result */
+    	if (topics == null || topics.size() == 0) {
+    		System.out.println("ERROR: We found no topics! Going to generic search results");
+    		topics =  Topic.find("select t from Topic t join t.tags as tag where tag = ?", "Generic").fetch();
+    	}
+
+    	Topic topic = getRandomTopicFrom(topics);
+    	
+    	Recommendation rec = new Recommendation(topic);
+    	rec.reasons.add(Reason.getReasonWithType(Reason.LIKE | Reason.MUTUAL));
+    	rec.save();
+    	return rec;
+	}
+	
+	public static String findLikeIntersection(List<User> people) {
+		Map<String, Integer> likeFrequencyMap = new HashMap<String, Integer>();
+		for (int i = 0; i < people.size(); i++) {
+			User user = people.get(i);
+			if (user.allUserLikes == null || user.allUserLikes.size() == 0 ||
+					user.frequencyOfLikes == null || user.frequencyOfLikes.size() == 0) {
+				user.getLikes();
+			}
+			List<LikeFrequency> likeFrequencies = user.frequencyOfLikes;
+			Collections.sort(likeFrequencies, new LikeFrequencyComparator());
+			for (int j = 0; j < likeFrequencies.size(); j++) {
+				LikeFrequency lf = likeFrequencies.get(j);
+				if (likeFrequencyMap.containsKey(lf.likeCategory)) {
+					likeFrequencyMap.put(lf.likeCategory, likeFrequencyMap.get(lf.likeCategory)+lf.frequency);
+				} else {
+					likeFrequencyMap.put(lf.likeCategory, lf.frequency);
+				}
+			}
+		}
+		Map.Entry<String, Integer> maxEntry= null;
+		Iterator iter = likeFrequencyMap.entrySet().iterator();
+		
+		while (iter.hasNext()) {
+			Map.Entry<String, Integer> lfmEntry = (Entry<String, Integer>) iter.next();
+			
+			if (maxEntry == null) {
+				maxEntry = lfmEntry;
+			} else {
+				if (lfmEntry.getValue() > maxEntry.getValue()) {
+					maxEntry = lfmEntry;
+				}
+			}
+		}
+			
+		return maxEntry.getKey();
 	}
 	
 	/* Choice Generation */
@@ -122,6 +193,12 @@ public class RecommendationEngine extends Controller{
 	}
     
     public static Topic fetchTopic(int seed) {
+    	User user = User.find("byUserId", Session.current().get("user")).first();
+    	
+    	return fetchTopicForUser(user, seed);
+    }
+    
+    public static Topic fetchTopicForUser(User user, int seed) {
     	JsonObject profile;
     
     	String tag;
@@ -140,11 +217,9 @@ public class RecommendationEngine extends Controller{
     		RSSEngine.fetchNews();
     	}
     	
-    	User user = User.find("byUserId", Session.current().get("user")).first();
-    	
 		if (user != null) {
 			if (user.frequencyOfLikes == null || user.frequencyOfLikes.size() == 0) {
-				Application.getUserLikes();
+				System.out.println("ERROR: This should not happen");
 			}
 			List<LikeFrequency> likeFrequencies = user.frequencyOfLikes;
 			Collections.sort(likeFrequencies, new LikeFrequencyComparator());
@@ -158,6 +233,7 @@ public class RecommendationEngine extends Controller{
 			return null;
 		}
 
+    	System.out.println("Looking for topic for tag:"+ tag);
     	List<Topic> topics = Topic.find("select t from Topic t join t.tags as tag where tag = ?", tag).fetch();
     	
     	/* If no topic is found, return a generic result */
