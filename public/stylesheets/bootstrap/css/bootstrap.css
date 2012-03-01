@@ -19,6 +19,24 @@ nav,
 section {
   display: block;
 }
+.imageTag{
+	margin-top:20px;
+	width:500px;
+}
+.leftContainerMain{
+	width:400px;
+	float:left;
+}
+
+.rightContainerMain{
+	width = 400px;
+	float:right;
+}
+.paddingOnTop{
+	padding-top: 30px;
+}
+
+
 audio, canvas, video {
   display: inline-block;
   *display: inline;
