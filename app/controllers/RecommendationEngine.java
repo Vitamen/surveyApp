@@ -218,15 +218,18 @@ public class RecommendationEngine extends Controller{
     	}
     	
 		if (user != null) {
+			System.out.println("Got a user :"+user);
 			if (user.frequencyOfLikes == null || user.frequencyOfLikes.size() == 0) {
 				System.out.println("ERROR: This should not happen");
 			}
 			List<LikeFrequency> likeFrequencies = user.frequencyOfLikes;
 			Collections.sort(likeFrequencies, new LikeFrequencyComparator());
 			LikeFrequency lf;
+			System.out.println("Found "+likeFrequencies.size()+" Likes");
 			if (likeFrequencies.size() > seed) {
 				lf = likeFrequencies.get(seed);
 				tag = LikeGroup.getLikeGroupFromCategory(lf.likeCategory);
+				System.out.println("Setting tag to "+tag);
 			}
 		} else {
 			System.out.println("ERROR: Could not find user in session.");
