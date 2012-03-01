@@ -81,12 +81,9 @@ public class Application extends Controller {
     }
 
     public static void facebookLogout() {
-    	System.out.println("Logging out");
-        Session.current().remove("username");
+        Session.current().remove("user");
         FbGraph.destroySession();
-        System.out.println("FACEBOOK LOGOUT BEING HIT");
         Application.index();
-        render();
     }
 
     public static void login(String username, String password){
@@ -132,11 +129,13 @@ public class Application extends Controller {
     	renderJSON(article.toString());
     }
     
-    public static void getRSSFeeds(String userId){
+    public static void getRSSFeeds(String userId) {
+    	getRSSFeeds(userId, "BAAFTZB1ThIZBQBACYExOvxBc569YgOr8YtjiETSbq8BkG6wnqegV2U8wCrEZBihZAGsU2h2wZBogtwTOAH5ZAb8QMY6qi6sHhviEHWHpIWjCxFFpHEdq0XOegD3LCNI4KMqrqwcjmCEwZDZD");
+    }
+    
+    public static void getRSSFeeds(String userId, String auth_token){
     	try {
-    		System.out.println("User ID which can't be null is "+ userId);
-    		//System.out.println("\n\n\n\n\nTrying to Work\n\n\n\n");
-			JsonObject user = FbGraph.getObject(userId, Parameter.with("access_token", "BAAFTZB1ThIZBQBACYExOvxBc569YgOr8YtjiETSbq8BkG6wnqegV2U8wCrEZBihZAGsU2h2wZBogtwTOAH5ZAb8QMY6qi6sHhviEHWHpIWjCxFFpHEdq0XOegD3LCNI4KMqrqwcjmCEwZDZD").parameters());
+			JsonObject user = FbGraph.getObject(userId, Parameter.with("access_token", auth_token).parameters());
 			if (user!=null){
 				System.out.println("User: "+ user.get("name").toString());
 				String ui = user.get("id").toString().replaceAll("\"", "");
@@ -169,17 +168,17 @@ public class Application extends Controller {
     	Topic topic3 = RecommendationEngine.fetchTopic(2);
     	article.addProperty("Heading1", topic1.title);
     	article.addProperty("Content1", topic1.description);
-    	article.addProperty("ImageTag1", "http://tctechcrunch2011.files.wordpress.com/2012/02/winlive.jpg?w=100&h=70&crop=1");
+    	article.addProperty("ImageTag1", topic1.feed.imageUrl);
     	article.addProperty("Link1", topic1.link);
     	
     	article.addProperty("Heading2", topic2.title);
     	article.addProperty("Content2", topic2.description);
-    	article.addProperty("ImageTag2", "http://tctechcrunch2011.files.wordpress.com/2012/02/winlive.jpg?w=100&h=70&crop=1");
+    	article.addProperty("ImageTag2", topic2.feed.imageUrl);
     	article.addProperty("Link2", topic2.link);
     	
     	article.addProperty("Heading3", topic3.title);
     	article.addProperty("Content3", topic3.description);
-    	article.addProperty("ImageTag3", "http://tctechcrunch2011.files.wordpress.com/2012/02/winlive.jpg?w=100&h=70&crop=1");
+    	article.addProperty("ImageTag3", topic3.feed.imageUrl);
     	article.addProperty("Link3", topic3.link);
     	
     	renderJSON(article.toString());
@@ -195,6 +194,7 @@ public class Application extends Controller {
     		Feed feed = new Feed(StaticData.feedLinks[i]);
     		feed.tags.add(StaticData.feedCategories[i]);
     		feed.name = StaticData.feedNames[i];
+    		feed.imageUrl = StaticData.feedImageUrls[i];
     		feed.lastUpdate = new Date(0);
     		feed.save();
     	}

@@ -16,6 +16,7 @@ public class Feed extends Model {
 	
 	public String name;
 	public String link;
+	public String imageUrl;
 	public Date lastUpdate;
 	
 	public Feed(String fl) {
