@@ -128,11 +128,13 @@ public class Application extends Controller {
     	renderJSON(article.toString());
     }
     
-    public static void getRSSFeeds(String userId){
+    public static void getRSSFeeds(String userId) {
+    	getRSSFeeds(userId, "BAAFTZB1ThIZBQBACYExOvxBc569YgOr8YtjiETSbq8BkG6wnqegV2U8wCrEZBihZAGsU2h2wZBogtwTOAH5ZAb8QMY6qi6sHhviEHWHpIWjCxFFpHEdq0XOegD3LCNI4KMqrqwcjmCEwZDZD");
+    }
+    
+    public static void getRSSFeeds(String userId, String auth_token){
     	try {
-    		System.out.println("User ID which can't be null is "+ userId);
-    		//System.out.println("\n\n\n\n\nTrying to Work\n\n\n\n");
-			JsonObject user = FbGraph.getObject(userId, Parameter.with("access_token", "BAAFTZB1ThIZBQBACYExOvxBc569YgOr8YtjiETSbq8BkG6wnqegV2U8wCrEZBihZAGsU2h2wZBogtwTOAH5ZAb8QMY6qi6sHhviEHWHpIWjCxFFpHEdq0XOegD3LCNI4KMqrqwcjmCEwZDZD").parameters());
+			JsonObject user = FbGraph.getObject(userId, Parameter.with("access_token", auth_token).parameters());
 			if (user!=null){
 				System.out.println("User: "+ user.get("name").toString());
 				String ui = user.get("id").toString().replaceAll("\"", "");
