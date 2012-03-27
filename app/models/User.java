@@ -19,6 +19,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import play.db.jpa.Model;
+import play.modules.facebook.FbGraph;
+import play.modules.facebook.FbGraphException;
+import play.modules.facebook.Parameter;
 
 @Entity
 public class User extends Model{
@@ -38,6 +41,30 @@ public class User extends Model{
 		this.userId = userId;
 		allUserLikes = new LinkedList<Likes>();
 		frequencyOfLikes = new LinkedList<LikeFrequency>();
+	}
+	
+	public void getLikes() {
+		try {
+    		String userId = this.userId;
+    		StringBuffer queryPart = new StringBuffer(userId+"/likes");
+			JsonArray userLikes = FbGraph.getConnection(queryPart.toString(), Parameter.with("limit", "1000").parameters());
+			
+			this.addAllLikes(userLikes);
+    	} catch (FbGraphException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void getLikesWithAuthToken(String auth_token) {
+    	try {
+    		String userId = this.userId;
+    		StringBuffer queryPart = new StringBuffer(userId+"/likes");
+    		JsonArray userLikes = FbGraph.getConnection(queryPart.toString(), Parameter.with("access_token", auth_token).parameters());
+			this.addAllLikes(userLikes);
+    	} catch (FbGraphException e) {
+			System.out.println("There was an error in the getUserInformationMethod");
+			e.printStackTrace();
+		}
 	}
 	
 	public void addLike(Likes newLike){

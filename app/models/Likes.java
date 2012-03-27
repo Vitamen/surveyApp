@@ -23,4 +23,8 @@ public class Likes extends Model{
 		this.category = category;
 		this.likesId = likesId;
 	}
+	
+	public boolean sameCategoryAs(Likes like) {
+		return this.category.compareToIgnoreCase(like.category) == 0;
+	}
 }
