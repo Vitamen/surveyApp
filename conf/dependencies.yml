@@ -4,7 +4,6 @@ require:
     - play 
     - play -> fbgraph 0.4:
              transitive: false
-    - com.sun.cnpi -> rssutils 1.1
 
 repositories:
   - provided:
@@ -13,3 +12,8 @@ repositories:
       contains:
         - com.sun.cnpi -> *
 
+  - provided:
+      type:       local
+      artifact:   "${application.path}/jars/KeyPhraseExtraction.jar"
+      contains:
+        - pt.voiceinteraction -> *
