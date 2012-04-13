@@ -1,0 +1,86 @@
+Domain	ID	# of Types	# of Instances #Topic
+American football	/american_football	23	21,223	Sports
+Amusement Parks	/amusement_parks	15	2,204	
+Architecture	/architecture	34	107,722	
+Astronomy	/astronomy	64	24,767
+Atom Feeds	/atom	5	1,038
+Automotive	/automotive	30	40,691
+Aviation	/aviation	27	23,473
+Awards	/award	29	129,949
+Baseball	/baseball	16	21,922
+Basketball	/basketball	12	12,538
+Bicycles	/bicycles	3	205
+Biology	/biology	49	272,577
+Boats	/boats	20	26,998
+Books	/book	20	6,314,894
+Broadcast	/broadcast	25	42,795
+Business	/business	53	611,751
+Celebrities	/celebrities	14	2,186
+Chemistry	/chemistry	15	14,562
+Comics	/comic_books	24	9,256
+Common	/common	15	22,811,605
+Community	/community	2	4
+Computers	/computer	31	17,699
+Conferences and Conventions	/conferences	7	1,505
+Cricket	/cricket	33	14,311
+Video Games	/cvg	30	67,311
+Data World	/dataworld	26	14,250
+Digicams	/digicams	18	1,429
+Education	/education	28	255,968
+Engineering	/engineering	24	1,248
+Event	/event	17	98,430
+Exhibitions	/exhibitions	9	7,261
+Fashion, Clothing and Textiles	/fashion	10	1,179
+Fictional Universes	/fictional_universe	36	269,898
+Film	/film	51	672,479
+Food & Drink	/food	67	27,756
+Freebase	/freebase	82	5,219
+Games	/games	14	5,541
+Physical Geography	/geography	21	64,204
+Geology	/geology	2	247
+Government	/government	35	135,796
+Ice Hockey	/ice_hockey	8	8,052
+IMDb	/imdb	1	0
+Influence	/influence	2	49,668
+Hobbies and Interests	/interests	8	2,176
+Internet	/internet	15	42,103
+Language	/language	9	12,367
+Law	/law	25	11,227
+Library	/library	2	10,299
+Location	/location	167	1,000,224
+Martial Arts	/martial_arts	6	1,970
+Measurement Unit	/measurement_unit	93	692
+Media	/media_common	43	3,658,791
+Medicine	/medicine	53	34,941
+Meteorology	/meteorology	9	1,747
+Military	/military	20	58,370
+Music	/music	63	9,563,658
+NYTimes	/nytimes	1	0
+Olympics	/olympics	18	59,246
+Opera	/opera	19	4,278
+Organization	/organization	33	738,865
+People	/people	28	2,050,135
+Periodicals	/periodicals	27	20,890
+Physics	/physics	10	50
+freequeue	/pipeline	10	12
+Projects	/projects	5	87,099
+Protected Places	/protected_sites	9	48,920
+Radio	/radio	4	637
+Rail	/rail	22	3,985
+Religion	/religion	22	17,142
+Royalty and Nobility	/royalty	29	30,751
+Skiing	/skiing	12	591
+Soccer	/soccer	24	111,980
+Spaceflight	/spaceflight	31	2,578
+Sports	/sports	46	308,513
+Symbols	/symbols	19	1,281
+Tennis	/tennis	7	4,531
+Theater	/theater	22	12,718
+Time	/time	11	2,032
+Transportation	/transportation	14	57,056
+Travel	/travel	14	5,710
+TV	/tv	41	1,119,212
+Metaweb System Types	/type	29	436,349
+Visual Art	/visual_art	13	46,581
+Wikipedia	/wikipedia	1	0
+Zoos and Aquariums	/zoos	4	758

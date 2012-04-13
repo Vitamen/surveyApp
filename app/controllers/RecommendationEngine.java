@@ -4,18 +4,24 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
+import com.aliasi.chunk.Chunk;
+import com.aliasi.cluster.KMeansClusterer;
+import com.aliasi.util.FeatureExtractor;
 import com.google.gson.JsonObject;
 import com.sun.cnpi.rss.elements.Item;
 import com.sun.cnpi.rss.elements.Rss;
@@ -38,16 +44,26 @@ import play.modules.facebook.FbGraph;
 import play.modules.facebook.FbGraphException;
 import play.mvc.Controller;
 import play.mvc.Scope.Session;
+import pt.voiceinteraction.keyphraseextraction.KeyPhrase;
 
 public class RecommendationEngine extends Controller{
 
 	public static void index() {
+		List<Topic> topics = Topic.all().fetch(50);
+		for (int i = 0; i < topics.size(); i++) {
+			addTagsToTopic(topics.get(i));
+		}
+		runKMeans();
 		/* Set up stuff */
+		//RSSEngine.fetchNews();
 		/*
 		LikeGroup.generateLikeGroupsFromStaticArray();
 		Application.getUserLikes();
 		Application.generateFeeds();
 		RSSEngine.fetchNews();*/
+		/*
+		Topic topic = (Topic) Topic.findAll().get(0);
+		addTagsToTopic(topic);
 		Session.current().put("user", 1243350056);
 		Date date = new Date();
 		Random random = new Random(date.getTime());
@@ -58,6 +74,7 @@ public class RecommendationEngine extends Controller{
 			renderArgs.put("choice", genericVsCalculatedChoice());
 		}
     	renderTemplate("Recommendation/index.html");
+    	*/
 	}
 	
 	public static Recommendation recommendationForFriendsWithUserIds(List<Long> userIds) {
@@ -236,7 +253,6 @@ public class RecommendationEngine extends Controller{
 			return null;
 		}
 
-    	System.out.println("Looking for topic for tag:"+ tag);
     	List<Topic> topics = Topic.find("select t from Topic t join t.tags as tag where tag = ?", tag).fetch();
     	
     	/* If no topic is found, return a generic result */
@@ -268,5 +284,61 @@ public class RecommendationEngine extends Controller{
     	
     	int i = random.nextInt(topics.size());
     	return topics.get(i);
+    }
+    
+    public static int addTagsToTopic(Topic topic) {
+        try {
+            int nrKeyphrases = 5;
+
+            EnglishKeyPhraseExtractor extractor = new EnglishKeyPhraseExtractor("/Users/sophiez/tmp/English_KEModel_manualData",
+                    "data/models/en_US/hub4_all.np.4g.hub97.1e-9.clm",
+                    "data/models/en_US/left3words-wsj-0-18.tagger",
+                    "data/stopwords/stopwords_en.txt");
+           
+            String[] texts = new String[]{
+            		topic.description
+            };
+            for (KeyPhrase keyPhrase : extractor.getKeyphrases(nrKeyphrases, Arrays.asList(texts))) {
+                System.out.println("Got keyphrase: "+keyPhrase.getKeyPhrase());
+            	topic.tags.add(keyPhrase.getKeyPhrase());
+            	topic.save();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
+    public static void runKMeans() {
+    	FeatureExtractor<Topic> featureExtractor = new FeatureExtractor<Topic>() {
+				@Override
+				public Map<String, ? extends Number> features(Topic topic) {
+					HashMap<String, Double> hm = new HashMap<String, Double>();
+					List<String> tags = topic.tags;
+					for (int i = 0; i < tags.size(); i++) {
+						hm.put(tags.get(i), 1.0);
+					}
+					return hm;
+				}
+    	};
+    	KMeansClusterer<Topic> kmc = new KMeansClusterer<Topic>(featureExtractor, 10, 5, true, 1.0);
+    	
+    	List<Topic> topics = Topic.all().fetch();
+    	HashSet<Topic> hs = new HashSet<Topic>(topics);
+    	
+    	Set<Set<Topic> > topicClusters = kmc.cluster(hs);
+    	Iterator<Set<Topic> > topicClusterIter = topicClusters.iterator();
+    	
+    	while(topicClusterIter.hasNext()) {
+    		Set<Topic> topicCluster = topicClusterIter.next();
+    		Iterator<Topic> topicIter = topicCluster.iterator();
+    		System.out.println();
+    		System.out.println("NEW CLUSTER: ");
+    		while(topicIter.hasNext()) {
+    			System.out.println(topicIter.next().tags);
+    		}
+    		
+    		System.out.println();
+    	}
     }
 }

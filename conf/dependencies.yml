@@ -4,6 +4,19 @@ require:
     - play 
     - play -> fbgraph 0.4:
              transitive: false
+    - pt.voiceinteraction -> KeyPhraseExtraction
+    - maui.stemmers -> Maui 1.2
+    - com.sun.cnpi -> rssutils 1.1
+    - . -> weka
+    - org.wikipedia -> wikipediaminer 1.1 
+    - smooth.lm -> smooth-lm 0.4
+    - edu -> stanford-ner
+    - edu.stanford -> stanford-nlp
+    - . -> opennlp-tools 1.5.0
+    - . -> maxent 3.0.0
+    - . -> Morphadorner 1.0
+    - . -> icu4j_3_4 3.4
+    - com.aliasi -> lingpipe 4.1.0
 
 repositories:
   - provided:
@@ -14,6 +27,78 @@ repositories:
 
   - provided:
       type:       local
-      artifact:   "${application.path}/jars/KeyPhraseExtraction.jar"
+      artifact:   "${application.path}/jars/Keyword/KeyPhraseExtraction.jar"
       contains:
         - pt.voiceinteraction -> *
+
+  - provided:
+      type:       local
+      artifact:   "${application.path}/jars/Keyword/Maui1.2.jar"
+      contains:
+        - maui.stemmers -> *
+     
+  - provided:
+      type:       local
+      artifact:   "${application.path}/jars/Keyword/weka.jar"
+      contains:
+        - .* -> *
+        
+  - provided:
+      type:       local
+      artifact:   "${application.path}/jars/weka.jar"
+      contains:
+        - .* -> *
+      
+  - provided:
+      type:       local
+      artifact:   "${application.path}/jars/Keyword/wikipediaminer1.1.jar"
+      contains:
+        - org.* -> *
+
+  - provided:
+      type:       local
+      artifact:   "${application.path}/jars/Keyword/smooth-lm-0.4.jar"
+      contains:
+        - .* -> *
+
+  - provided:
+      type:       local
+      artifact:   "${application.path}/jars/Keyword/stanford-nlp.jar"
+      contains:
+        - edu.stanford.* -> *
+        
+  - provided:
+      type:       local
+      artifact:   "${application.path}/jars/Keyword/stanford-ner.jar"
+      contains:
+        - .* -> *
+
+  - provided:
+      type:       local
+      artifact:   "${application.path}/jars/Keyword/opennlp-tools-1.5.0.jar"
+      contains:
+        - .* -> *
+        
+  - provided:
+      type:       local
+      artifact:   "${application.path}/jars/Keyword/maxent-3.0.0.jar"
+      contains:
+        - .* -> *
+        
+  - provided:
+      type:       local
+      artifact:   "${application.path}/jars/Keyword/Morphadorner.jar"
+      contains:
+        - .* -> *
+
+  - provided:
+      type:       local
+      artifact:   "${application.path}/jars/Keyword/icu4j_3_4.jar"
+      contains:
+        - .* -> *
+ 
+  - provided:
+      type:       local
+      artifact:   "${application.path}/jars/lingpipe-4.1.0.jar"
+      contains:
+        - .* -> *
