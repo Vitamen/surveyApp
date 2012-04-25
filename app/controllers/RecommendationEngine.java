@@ -16,8 +16,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.jsoup.Jsoup;
 
 import com.aliasi.chunk.Chunk;
 import com.aliasi.cluster.KMeansClusterer;
@@ -49,11 +51,13 @@ import pt.voiceinteraction.keyphraseextraction.KeyPhrase;
 public class RecommendationEngine extends Controller{
 
 	public static void index() {
-		List<Topic> topics = Topic.all().fetch(50);
+		//List<Topic> topics = Topic.all().fetch();
+		/*
 		for (int i = 0; i < topics.size(); i++) {
 			addTagsToTopic(topics.get(i));
-		}
+		} */
 		runKMeans();
+		//runKMeans();
 		/* Set up stuff */
 		//RSSEngine.fetchNews();
 		/*
@@ -287,6 +291,10 @@ public class RecommendationEngine extends Controller{
     }
     
     public static int addTagsToTopic(Topic topic) {
+    	for (int i = 1; i < topic.tags.size(); i++) {
+    		topic.tags.remove(i);
+    		topic.save();
+    	}
         try {
             int nrKeyphrases = 5;
 
@@ -313,15 +321,37 @@ public class RecommendationEngine extends Controller{
     	FeatureExtractor<Topic> featureExtractor = new FeatureExtractor<Topic>() {
 				@Override
 				public Map<String, ? extends Number> features(Topic topic) {
+					HashSet hs = new HashSet();
+					for (int i = 0; i < StaticData.feedCategories.length; i++) {
+						hs.add(StaticData.feedCategories[i]);
+					}
+
 					HashMap<String, Double> hm = new HashMap<String, Double>();
 					List<String> tags = topic.tags;
+
 					for (int i = 0; i < tags.size(); i++) {
-						hm.put(tags.get(i), 1.0);
+						String tag = tags.get(i);
+						if (hs.contains(tag)) {
+							continue;
+						}
+						tag = tag.toLowerCase();
+					    StringTokenizer st = new StringTokenizer(tags.get(i));
+					    if (st.countTokens() > 1) {
+					    	while (st.hasMoreTokens()) {
+					    		String token = st.nextToken();
+					    		if (hm.containsKey(token)) {
+					    			hm.put(token, 1.0+hm.get(token));
+					    		} else {
+					    			hm.put(token, 1.0);
+					    		}
+					    	}
+					    }
+						hm.put(tag, 1.0);
 					}
 					return hm;
 				}
     	};
-    	KMeansClusterer<Topic> kmc = new KMeansClusterer<Topic>(featureExtractor, 10, 5, true, 1.0);
+    	KMeansClusterer<Topic> kmc = new KMeansClusterer<Topic>(featureExtractor, 20, 1, true, 10.0);
     	
     	List<Topic> topics = Topic.all().fetch();
     	HashSet<Topic> hs = new HashSet<Topic>(topics);

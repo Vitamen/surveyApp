@@ -17,6 +17,7 @@ require:
     - . -> Morphadorner 1.0
     - . -> icu4j_3_4 3.4
     - com.aliasi -> lingpipe 4.1.0
+    - org.jsoup -> jsoup 1.6.2
 
 repositories:
   - provided:
@@ -100,5 +101,11 @@ repositories:
   - provided:
       type:       local
       artifact:   "${application.path}/jars/lingpipe-4.1.0.jar"
+      contains:
+        - .* -> *
+
+  - provided:
+      type:       local
+      artifact:   "${application.path}/jars/jsoup-1.6.2.jar"
       contains:
         - .* -> *
