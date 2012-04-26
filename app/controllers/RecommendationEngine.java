@@ -51,12 +51,13 @@ import pt.voiceinteraction.keyphraseextraction.KeyPhrase;
 public class RecommendationEngine extends Controller{
 
 	public static void index() {
-		//List<Topic> topics = Topic.all().fetch();
-		/*
+		//Topic topic = Topic.findById((long)22334);
+		//System.out.println(topic.description);
+		List<Topic> topics = Topic.all().fetch();
 		for (int i = 0; i < topics.size(); i++) {
 			addTagsToTopic(topics.get(i));
-		} */
-		runKMeans();
+		}
+		//runKMeans();
 		//runKMeans();
 		/* Set up stuff */
 		//RSSEngine.fetchNews();
@@ -65,9 +66,7 @@ public class RecommendationEngine extends Controller{
 		Application.getUserLikes();
 		Application.generateFeeds();
 		RSSEngine.fetchNews();*/
-		/*
-		Topic topic = (Topic) Topic.findAll().get(0);
-		addTagsToTopic(topic);
+		
 		Session.current().put("user", 1243350056);
 		Date date = new Date();
 		Random random = new Random(date.getTime());
@@ -78,7 +77,6 @@ public class RecommendationEngine extends Controller{
 			renderArgs.put("choice", genericVsCalculatedChoice());
 		}
     	renderTemplate("Recommendation/index.html");
-    	*/
 	}
 	
 	public static Recommendation recommendationForFriendsWithUserIds(List<Long> userIds) {
@@ -291,12 +289,16 @@ public class RecommendationEngine extends Controller{
     }
     
     public static int addTagsToTopic(Topic topic) {
-    	for (int i = 1; i < topic.tags.size(); i++) {
-    		topic.tags.remove(i);
+    	while(topic.tags.size() > 1) {
+    		topic.tags.remove(1);
     		topic.save();
     	}
+    	
         try {
-            int nrKeyphrases = 5;
+            int nrKeyphrases = 0;
+            StringTokenizer st = new StringTokenizer(topic.description);
+            int numberOfWords = st.countTokens();
+            nrKeyphrases = Math.max(5, Math.min(30, numberOfWords / 30));
 
             EnglishKeyPhraseExtractor extractor = new EnglishKeyPhraseExtractor("/Users/sophiez/tmp/English_KEModel_manualData",
                     "data/models/en_US/hub4_all.np.4g.hub97.1e-9.clm",
@@ -331,27 +333,24 @@ public class RecommendationEngine extends Controller{
 
 					for (int i = 0; i < tags.size(); i++) {
 						String tag = tags.get(i);
+						/*
 						if (hs.contains(tag)) {
 							continue;
-						}
+						}*/
 						tag = tag.toLowerCase();
 					    StringTokenizer st = new StringTokenizer(tags.get(i));
 					    if (st.countTokens() > 1) {
 					    	while (st.hasMoreTokens()) {
 					    		String token = st.nextToken();
-					    		if (hm.containsKey(token)) {
-					    			hm.put(token, 1.0+hm.get(token));
-					    		} else {
-					    			hm.put(token, 1.0);
-					    		}
+					    		hm.put(token, (double) token.hashCode());
 					    	}
 					    }
-						hm.put(tag, 1.0);
+						hm.put(tag, (double) tag.hashCode());
 					}
 					return hm;
 				}
     	};
-    	KMeansClusterer<Topic> kmc = new KMeansClusterer<Topic>(featureExtractor, 20, 1, true, 10.0);
+    	KMeansClusterer<Topic> kmc = new KMeansClusterer<Topic>(featureExtractor, 30, 1, true, 10.0);
     	
     	List<Topic> topics = Topic.all().fetch();
     	HashSet<Topic> hs = new HashSet<Topic>(topics);
@@ -365,7 +364,8 @@ public class RecommendationEngine extends Controller{
     		System.out.println();
     		System.out.println("NEW CLUSTER: ");
     		while(topicIter.hasNext()) {
-    			System.out.println(topicIter.next().tags);
+    			Topic nextTopic = topicIter.next();
+    			System.out.println(nextTopic.tags);
     		}
     		
     		System.out.println();
