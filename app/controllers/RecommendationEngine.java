@@ -301,7 +301,7 @@ public class RecommendationEngine extends Controller{
             int numberOfWords = st.countTokens();
             nrKeyphrases = Math.max(5, Math.min(30, numberOfWords / 30));
 
-            EnglishKeyPhraseExtractor extractor = new EnglishKeyPhraseExtractor("/Users/sophiez/tmp/English_KEModel_manualData",
+            EnglishKeyPhraseExtractor extractor = new EnglishKeyPhraseExtractor("data/English_KEModel_manualData",
                     "data/models/en_US/hub4_all.np.4g.hub97.1e-9.clm",
                     "data/models/en_US/left3words-wsj-0-18.tagger",
                     "data/stopwords/stopwords_en.txt");
