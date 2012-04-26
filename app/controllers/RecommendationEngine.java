@@ -66,7 +66,7 @@ public class RecommendationEngine extends Controller{
 		Application.getUserLikes();
 		Application.generateFeeds();
 		RSSEngine.fetchNews();*/
-		
+		/*
 		Session.current().put("user", 1243350056);
 		Date date = new Date();
 		Random random = new Random(date.getTime());
@@ -77,6 +77,7 @@ public class RecommendationEngine extends Controller{
 			renderArgs.put("choice", genericVsCalculatedChoice());
 		}
     	renderTemplate("Recommendation/index.html");
+    	*/
 	}
 	
 	public static Recommendation recommendationForFriendsWithUserIds(List<Long> userIds) {

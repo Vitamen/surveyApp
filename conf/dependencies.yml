@@ -3,7 +3,7 @@
 require:
     - play 
     - play -> fbgraph 0.4:
-             transitive: 
+             transitive: false
     - commons-lang 3.0
     - commons-io 1.4
     - commons-logging 1.0.4
