@@ -3,6 +3,8 @@
 #{fbg.scriptAsync /}
 
 
+
+
 <link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/recommendation.css'}" />
 <div class = "container">
 <div id="question"><h3>Which topic can you picture yourself having a conversation with?</h3></div>
@@ -14,7 +16,7 @@
 	<div id ="wrapper" width="940px">
 		<div id="topic-1" class="topic">
 		%{
-			topic = choice.recommendations.get(0).topic
+			topic = choice.recommendations.get(0).topic;
 			String topicNoLinks = topic.description;
 			StringBuffer newContent = new StringBuffer(topicNoLinks);
 			int index = newContent.indexOf("<");
@@ -66,5 +68,4 @@
 <div class="logoutButton">
 	<button type="button" onclick="facebookLogoutNow()">Logout</button>
 </div>
-	
 

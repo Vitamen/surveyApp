@@ -1,5 +1,6 @@
 package controllers;
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -82,6 +83,8 @@ public class RSSEngine {
 			                topic.tags.addAll(feed.tags);
 			                topic.feed = feed;
 			                topic.save();
+			                List<Topic> topics = Topic.findAll();
+			    			System.out.println("@#$%^&*(*&^%$#@        "+topics.size());
 		                } else {
 		                	break;
 		                }

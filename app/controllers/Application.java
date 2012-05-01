@@ -67,17 +67,55 @@ public class Application extends Controller {
             } else {
             	user = userList.get(0);
             }
-
+            
+    		 
             Session.current().put("user", user.userId);
+            StringBuffer queryPart = new StringBuffer(user.userId+"/friends");
+            
+    		JsonArray friends = FbGraph.getConnection(queryPart.toString(), Parameter.with("access_token", "AAACEdEose0cBAGBMNXT6Bo0d6v6ynmXk8RtCXER9pzPNOAbPEO5nqSNAFhmZCINNc4rBfsuklwkmH2tLVymNTlZBP38GYlcdpl016E9QZDZD").parameters());
+    		System.out.println("*****************Friends returned");
+    		ArrayList<String> names = new ArrayList<String>();
+    		for(int i = 0; i< friends.size(); i++)
+    		{
+    			JsonObject obj = friends.get(i).getAsJsonObject();
+    			String name = obj.get("name").toString();
+    			name=name.replaceAll("\"", "");
+    			names.add(name);
+    		}
+    		Collections.sort(names);
+    		
+    		System.out.println("Putting friends in the renderArgs method");
+    		renderArgs.put("allFriends", names);
+            
             // do useful things
             Session.current().put("username", "xxx"); // put the email into the session (for the Secure module)
         } catch (FbGraphException fbge) {
+        	System.out.println("ERROORRRRR ********** NOOOOOOO");
             flash.error(fbge.getMessage());
             if (fbge.getType() != null && fbge.getType().equals("OAuthException")) {
                 Session.current().remove("username");
             }
         }
-        RecommendationEngine.index();
+        RecommendationEngine.fetchNews();
+        System.out.println("Hitting this");
+           
+        System.out.println("From Application.facebookLogin()");
+        Choice choice = new Choice();
+      
+       List<Recommendation> list=RecommendationEngine.generateChoiceOfSize(3).recommendations;
+       for (int i = 0; i < list.size(); i++){
+    	   choice.recommendations.add(list.get(i));
+       }
+       
+       System.out.println("Size of recommendation list "+list.size());
+       renderArgs.put("choice", choice);
+       //The class cast exception happens when you are passing the Choice object from the Applicaiton.java to Recommendation.java
+       
+       //Rendering template
+       
+       renderTemplate("Recommendation/verticalTopics.html");
+
+       
     }
 
     public static void facebookLogout() {
