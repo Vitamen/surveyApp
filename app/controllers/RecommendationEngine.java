@@ -148,6 +148,29 @@ public class RecommendationEngine extends Controller{
 	}
 	
 	/* Choice Generation */
+	public static Choice generateChoiceOfSize (int numRecs) {
+		Choice choice = new Choice();
+		List<Topic> topics = Topic.findAll();
+		for (int i = 0; i < numRecs - 1; i++) {
+			Topic topic = getRandomTopicFrom(topics);
+			Recommendation recommendation = new Recommendation(topic);
+			Reason genericReason = Reason.getCategoryReason(Reason.GENERIC);
+			recommendation.addReason(genericReason);
+			recommendation.save();
+			choice.addRecommendation(recommendation);
+		}
+		
+		/* TODO get calculated choice */
+		Topic topic = getRandomTopicFrom(topics);
+		Recommendation recommendation = new Recommendation(topic);
+		Reason calculated = Reason.getCategoryReason(Reason.LIKE);
+		recommendation.addReason(calculated);
+		recommendation.save();
+		choice.addRecommendation(recommendation);
+		
+		return choice;
+	}
+	
 	public static Choice genericVsCalculatedChoice() {
 		List<Topic> topics = Topic.find("select t from Topic t join t.tags as tag where tag = ?", "Generic").fetch();
 		Topic topic1 = getRandomTopicFrom(topics);
