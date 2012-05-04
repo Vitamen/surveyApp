@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 public class Topic extends Model {
 	@ElementCollection
-	public List<String> tags;
+	public List<Tag> tags;
 	
 	@ManyToOne
 	public Feed feed;
@@ -24,7 +24,7 @@ public class Topic extends Model {
 	public String link;
 	
 	public Topic() {
-		tags = new ArrayList<String>();
+		tags = new ArrayList<Tag>();
 		title = "";
 		description = "";
 		link = "";

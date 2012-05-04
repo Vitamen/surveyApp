@@ -30,6 +30,7 @@ import com.sun.cnpi.rss.parser.RssParserFactory;
 
 import models.Choice;
 import models.Feed;
+import models.Tag;
 import models.Topic;
 
 /* This class is in charge of subscribing to, parsing, and saving data from different RSS feeds (mostly
@@ -50,6 +51,7 @@ public class RSSEngine {
 	
 	public static void fetchFeed(Feed feed) {
 		try {
+			
 			RssParser rp = RssParserFactory.createDefault();
 			Rss rss = rp.parse(new URL(feed.link));
 			
@@ -80,7 +82,14 @@ public class RSSEngine {
 			                topic.title = title;
 			                topic.link = link;
 			                topic.description = description;
-			                topic.tags.addAll(feed.tags);
+			                for (int tagsI = 0; tagsI < feed.tags.size(); tagsI++) {
+			                	Tag tag = new Tag();
+			                	tag.name = feed.tags.get(tagsI);
+			                	tag.confidence = 1.0;
+			                	tag.rank = 1;
+			                	tag.save();
+				                topic.tags.add(tag);
+			                }
 			                topic.feed = feed;
 			                topic.save();
 			                List<Topic> topics = Topic.findAll();

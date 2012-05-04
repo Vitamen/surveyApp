@@ -40,6 +40,7 @@ import models.LikeGroup;
 import models.Likes;
 import models.Reason;
 import models.Recommendation;
+import models.Tag;
 import models.Topic;
 import models.User;
 
@@ -55,16 +56,24 @@ public class RecommendationEngine extends Controller{
 		//Topic topic = Topic.findById((long)22334);
 		//System.out.println(topic.description);
 		
-		List<Topic> topics = Topic.all().fetch();
+		
 		//System.out.println(topics.size());
 		
+		/*
+		LikeGroup.generateLikeGroupsFromStaticArray();
+		Application.generateFeeds();
+		RSSEngine.fetchNews();
+		System.out.println("FOO ");
+		List<Topic> topics = Topic.all().fetch();
 		for (int i = 0; i < topics.size(); i++) {
 			addTagsToTopic(topics.get(i));
 		}
+		*/
+		
 		//runKMeans();
 		//runKMeans();
 		/* Set up stuff */
-		//RSSEngine.fetchNews();
+		
 		/*
 		LikeGroup.generateLikeGroupsFromStaticArray();
 		Application.getUserLikes();
@@ -352,11 +361,18 @@ public class RecommendationEngine extends Controller{
                     "data/stopwords/stopwords_en.txt");
            
             String[] texts = new String[]{
-            		topic.description
+            		Jsoup.parse(topic.description).text()
             };
             for (KeyPhrase keyPhrase : extractor.getKeyphrases(nrKeyphrases, Arrays.asList(texts))) {
                 System.out.println("Got keyphrase: "+keyPhrase.getKeyPhrase());
-            	topic.tags.add(keyPhrase.getKeyPhrase());
+                
+                /* Create the tag and attach it */
+                Tag tag = new Tag();
+                tag.name = keyPhrase.getKeyPhrase().toLowerCase();
+                tag.confidence = keyPhrase.getConfidence();
+                tag.rank = keyPhrase.getRank();
+                tag.save();
+            	topic.tags.add(tag);
             	topic.save();
             }
         } catch (Exception e) {
@@ -375,46 +391,70 @@ public class RecommendationEngine extends Controller{
     	FeatureExtractor<Topic> featureExtractor = new FeatureExtractor<Topic>() {
 				@Override
 				public Map<String, ? extends Number> features(Topic topic) {
-					HashSet hs = new HashSet();
-					for (int i = 0; i < StaticData.feedCategories.length; i++) {
-						hs.add(StaticData.feedCategories[i]);
-					}
-
 					HashMap<String, Double> hm = (HashMap<String, Double>) master.clone();
-					List<String> tags = topic.tags;
+					List<Tag> tags = topic.tags;
 					
 					//TODO : Can be further optimized by tokenizing the tags and setting them to 1 aswell
-					for (int i = 0; i < tags.size(); i++) {
-						String tag = tags.get(i);
-						
+					for (int i = 1; i < tags.size(); i++) {
+						Tag tag = tags.get(i);
+						StringTokenizer st = new StringTokenizer(tag.name);
+	    				if (st.countTokens() > 1) {
+	    					while (st.hasMoreTokens()) {
+	    						String token = st.nextToken();
+	    						
+	    						if(hm.containsKey(token)){
+	    							hm.put(token,hm.get(token)+tag.confidence);
+	    						}
+	    					}
+	    				}
 						if (hm.containsKey(tag)){
-							hm.put(tag,hm.get(tag)+1.0);
+							hm.put(tag.name,hm.get(tag)+tag.confidence);
 						}
 						
 					}
 					return hm;
-				
 				}
     	};
     	
     	
-    	KMeansClusterer<Topic> kmc = new KMeansClusterer<Topic>(featureExtractor, 30, 1, true, 10.0);
+    	KMeansClusterer<Topic> kmc = new KMeansClusterer<Topic>(featureExtractor, 70, 100, true, 10.0);
     	
     	
     	
     	Set<Set<Topic> > topicClusters = kmc.cluster(hs);
     	Iterator<Set<Topic> > topicClusterIter = topicClusters.iterator();
+    	int sizeOfMaxCluster = 30;
     	
     	while(topicClusterIter.hasNext()) {
     		Set<Topic> topicCluster = topicClusterIter.next();
+    		if (topicCluster.size() > sizeOfMaxCluster) {
+    			
+    		}
     		Iterator<Topic> topicIter = topicCluster.iterator();
     		System.out.println();
     		System.out.println("NEW CLUSTER: ");
+    		HashMap<String,Integer> hmp = new HashMap<String,Integer>();
     		while(topicIter.hasNext()) {
     			Topic nextTopic = topicIter.next();
-    			System.out.println(nextTopic.tags);
+    			
+    			//Make a tally to find the most popular keyword in each cluster
+    			for (Tag t :nextTopic.tags){
+    				if (hmp.containsKey(t.name)){
+    					hmp.put(t.name, hmp.get(t.name)+1);
+    				}
+    				else{
+    					hmp.put(t.name,0);
+    				}
+    				System.out.print(t.name + ",");
+    			}
+    			//System.out.println(nextTopic.tags);
+    			System.out.println();
+    			//
     		}
-    		
+
+    		for (String item : hmp.keySet()){
+    		//	System.out.println(item + " " + hmp.get(item));
+    		}
     		System.out.println();
     	}
     }
@@ -422,12 +462,14 @@ public class RecommendationEngine extends Controller{
     private static HashMap<String, Double> createHashMap(HashSet topics){
     	HashMap<String, Double> master = new HashMap<String, Double>();
     	Iterator<Topic> it = topics.iterator();
+    	
+    	
     	while(it.hasNext()){
     		//Insert all the tags into the master map if they are not already present
-    		for (String tag : it.next().tags){
-    			if(!master.containsKey(tag)){
-    				tag = tag.toLowerCase();
-    				StringTokenizer st = new StringTokenizer(tag);
+    		for (Tag tag : it.next().tags){
+    			if(!master.containsKey(tag.name)){
+    				tag.name = tag.name.toLowerCase();
+    				StringTokenizer st = new StringTokenizer(tag.name);
     				if (st.countTokens() > 1) {
     					while (st.hasMoreTokens()) {
     						String token = st.nextToken();
@@ -437,10 +479,10 @@ public class RecommendationEngine extends Controller{
     						}
     					}
     				}
-    				master.put(tag, 0.0);
+    				master.put(tag.name, 0.0);
     			}
     		}	
     	}
-    return master;
+    	return master;
     }
 }
