@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.IOException;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -80,8 +81,22 @@ public class RecommendationEngine extends Controller{
 			renderArgs.put("choice", genericVsCalculatedChoice());
 		}
     	renderTemplate("Recommendation/index.html");
+    	  
     	*/
+    	
 	}
+	
+	public static boolean fetchNews() {
+		List<Topic> topics = Topic.findAll();
+		if (topics.size() == 0) {
+			RSSEngine.fetchNews();
+			topics = Topic.findAll();
+			System.out.println(topics.size());
+		}
+	
+		return true;
+	}
+	
 	
 	public static Recommendation recommendationForFriendsWithUserIds(List<Long> userIds) {
 		List<User> people = new ArrayList<User>();
@@ -151,6 +166,31 @@ public class RecommendationEngine extends Controller{
 	}
 	
 	/* Choice Generation */
+	public static Choice generateChoiceOfSize (int numRecs) {
+		Choice choice = new Choice();
+		List<Topic> topics = Topic.findAll();
+		System.out.println("Size of topics "+topics.size());
+		
+		for (int i = 0; i < numRecs - 1; i++) {
+			Topic topic = getRandomTopicFrom(topics);
+			Recommendation recommendation = new Recommendation(topic);
+			Reason genericReason = Reason.getCategoryReason(Reason.GENERIC);
+			recommendation.addReason(genericReason);
+			recommendation.save();
+			choice.addRecommendation(recommendation);
+		}
+		
+		/* TODO get calculated choice */
+		Topic topic = getRandomTopicFrom(topics);
+		Recommendation recommendation = new Recommendation(topic);
+		Reason calculated = Reason.getCategoryReason(Reason.LIKE);
+		recommendation.addReason(calculated);
+		recommendation.save();
+		choice.recommendations.add(recommendation);
+		System.out.println("Returned with choice");
+		return choice;
+	}
+	
 	public static Choice genericVsCalculatedChoice() {
 		List<Topic> topics = Topic.find("select t from Topic t join t.tags as tag where tag = ?", "Generic").fetch();
 		Topic topic1 = getRandomTopicFrom(topics);
@@ -287,6 +327,8 @@ public class RecommendationEngine extends Controller{
     public static Topic getRandomTopicFrom(List<Topic> topics) {
     	Date date = new Date();
     	Random random = new Random(date.getTime());
+    	System.out.println(topics.size());
+    	
     	
     	int i = random.nextInt(topics.size());
     	return topics.get(i);

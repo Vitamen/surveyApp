@@ -1,0 +1,120 @@
+#{extends 'main.html' /}
+#{set title:'Home page' /}
+#{fbg.scriptAsync /}
+
+
+
+<div class = "container">
+	
+	<form class="form-inline">
+	
+	<label>Select a friend to generate conversation topics ${allFriends.get(0)}</label>
+		
+		<select>
+			%{
+				for (int i =0; i<allFriends.size(); i++)
+				{
+				   out.print('<option>'+allFriends.get(i)+'</option>');
+				}
+			}%
+		</select>
+		<button type="submit" class="btn">Select Friend</button>
+	</form>
+	<hr/>
+
+%{
+	int maxSize =600;
+	topicA = choice.recommendations.get(0).topic;
+	String topicNoLinks = topicA.description;
+	StringBuffer newContent = new StringBuffer(topicNoLinks);
+	int index = newContent.indexOf("<");
+	while(index >=0)
+	{
+		int endIndex = newContent.indexOf(">", index);
+		newContent = newContent.delete(index, endIndex+1);
+		index = newContent.indexOf("<");
+	}
+	if(newContent.length()>maxSize){
+		newContent=new StringBuffer(newContent.substring(0, maxSize));
+		newContent=newContent.append("...");
+	}
+	
+	String finalContent = newContent.toString();
+	
+	topicB = choice.recommendations.get(1).topic;
+	String topicNoLinksB = topicB.description;
+	StringBuffer newContentB = new StringBuffer(topicNoLinksB);
+	int indexB = newContentB.indexOf("<");
+	while(indexB >=0)
+	{
+		int endIndexB = newContentB.indexOf(">", indexB);
+		
+		newContentB = newContentB.delete(indexB, endIndexB+1);
+		indexB = newContentB.indexOf("<");
+	}
+	if(newContentB.length()>maxSize){
+		newContentB=new StringBuffer(newContentB.substring(0, maxSize));
+		newContentB=newContentB.append("...");
+	}
+	String finalContentB = newContentB.toString();
+	
+	topicC = choice.recommendations.get(2).topic;
+	String topicNoLinksC = topicC.description;
+	StringBuffer newContentC = new StringBuffer(topicNoLinksC);
+	int indexC = newContentC.indexOf("<");
+	while(indexC >=0)
+	{
+		int endIndexC = newContentC.indexOf(">", indexC);
+		newContentC = newContentC.delete(indexC, endIndexC+1);
+		indexC = newContentC.indexOf("<");
+	}
+	if(newContentC.length()> maxSize){
+		newContentC=new StringBuffer(newContentC.substring(0, maxSize));
+		newContentC=newContentC.append("...");
+	}
+	String finalContentC = newContentC.toString();
+	
+}%
+	
+<div class="well">
+		<form class="form-inline">
+			<img src="@{'public/images/favicon.png'}"/><b>${topicA.title}</b>
+		<div class="floatRight">
+		<button type="submit" class="btn btn-success">Select Topic</button>
+		</div>
+		</form>
+		<blockquote>
+			${finalContent}
+		</blockquote>
+	</div>	
+	
+	
+	
+	
+	<div class="well">
+		<form class="form-inline">
+			<img src="@{'public/images/favicon.png'}"/><b>${topicB.title}</b>
+		<div class="floatRight">
+		<button type="submit" class="btn btn-success">Select Topic</button>
+		</div>
+		</form>
+		<blockquote>
+			${finalContentB}
+		</blockquote>
+	</div>	
+	
+	<div class="well">
+		<form class="form-inline">
+			<img src="@{'public/images/favicon.png'}"/><b>${topicC.title}</b>
+		<div class="floatRight">
+		<button type="submit" class="btn btn-success">Select Topic</button>
+		
+		</div>
+		</form>
+		<blockquote>
+			${finalContentC}
+		</blockquote>
+	</div>	
+	
+	
+</div>

@@ -2,36 +2,47 @@
 #{set title:'Home' /}
 #{fbg.scriptAsync /}
 
-<div class="container">
-	<div class="leftContainerMain">
-		<p class="paddingOnTop">
-			Conversationalist is an iPhone application which helps people have conversations with people 
-			they  may not know as well. This is done by generating user related RSS feeds based on 
-			their <b>online social footprint</b>. 
+
+	<div class = "container">
+		
+		<div class="leftContainerMain">
+		<br/>
+		<br/>
+		<br/>
+		<blockquote>
+			<p class="large">
+				Ever felt as though you and your friends talk about the exact same thing
+				over and over again? Ever felt as though you were at a loss of words when
+				talking to a crush?
+			</p>
 			<br/>
+			<p class="large">
+				Conversationalist analyzes your Facebook profile information as well as
+				your friend to generate conversation topics that you both would be 
+				interested in.	
+			</p>
 			<br/>
-			To ensure the highest level of user experience, we need to ensure that our recommendation
-			engine for articles provides an good articles for users to use during their conversation. 
+			<p class="large">
+				Help us make a more refined app by taking part in this beta test. 
+			</p>
+			
 			<br/>
-			<br/>
-			This is the purpose of the analysis engine. We hope to fine-tune our algorithm by keeping track
-			what you as users would choose as a potential conversation topic. All data will be completely 
-			anonymized and we are not storing any of your Facebook information.
-			<br/>
-			<br/>
-			Thank you for contributing to our research. 
-		</p>
-		<div class="span2">
-			<div class="fb-login-button" onlogin="facebookLogin();" scope="
-									user_about_me, user_activities, user_birthday, user_checkins, user_education_history, user_events, user_groups, user_hometown
-									user_interests, user_likes, user_relationships, user_relationship_details, user_relationship_details, user_religion_politics, user_work_history
-									friends_about_me, friends_activities, friends_birthday, friends_checkins, friends_education_history, friends_events, friends_groups,
-									friends_hometown, friends_interests, friends_likes, friends_relationships, friends_relationship_details, friends_religion_politics, friends_work_history">
-									
-									Login
-									
+				<div class="fb-login-button" onlogin="facebookLogin();" scope="
+										user_about_me, user_activities, user_birthday, user_checkins, user_education_history, user_events, user_groups, user_hometown
+										user_interests, user_likes, user_relationships, user_relationship_details, user_relationship_details, user_religion_politics, user_work_history
+										friends_about_me, friends_activities, friends_birthday, friends_checkins, friends_education_history, friends_events, friends_groups,
+										friends_hometown, friends_interests, friends_likes, friends_relationships, friends_relationship_details, friends_religion_politics, friends_work_history">
+										
+										Login
+										
+				</div>
 			</div>
-		</div>					
+		</blockquote>
+		<div class="rightContainerMain">
+			<img src="@{'/public/images/iPhoneImages.png'}"/>
+		</div>
+	</div>
+
 		<script type="text/javascript">
 		    function facebookLogin() {
 		        // get current login status from facebook.com
@@ -45,9 +56,10 @@
 		         });
 		    }
 		</script>
-	</div>
-	<div class="rightContainerMain">
-		    <img src="@{'public/images/iPhoneImages.png'}"/>
-	</div>
+
+
+
+
+
 
 </div>
