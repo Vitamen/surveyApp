@@ -53,7 +53,10 @@ public class RecommendationEngine extends Controller{
 	public static void index() {
 		//Topic topic = Topic.findById((long)22334);
 		//System.out.println(topic.description);
+		
 		List<Topic> topics = Topic.all().fetch();
+		//System.out.println(topics.size());
+		
 		for (int i = 0; i < topics.size(); i++) {
 			addTagsToTopic(topics.get(i));
 		}
@@ -321,6 +324,12 @@ public class RecommendationEngine extends Controller{
     }
     
     public static void runKMeans() {
+    	
+    	List<Topic> topics = Topic.all().fetch();
+    	HashSet<Topic> hs = new HashSet<Topic>(topics);
+    	
+		final HashMap<String, Double> master = createHashMap(hs);
+		
     	FeatureExtractor<Topic> featureExtractor = new FeatureExtractor<Topic>() {
 				@Override
 				public Map<String, ? extends Number> features(Topic topic) {
@@ -329,32 +338,27 @@ public class RecommendationEngine extends Controller{
 						hs.add(StaticData.feedCategories[i]);
 					}
 
-					HashMap<String, Double> hm = new HashMap<String, Double>();
+					HashMap<String, Double> hm = (HashMap<String, Double>) master.clone();
 					List<String> tags = topic.tags;
-
+					
+					//TODO : Can be further optimized by tokenizing the tags and setting them to 1 aswell
 					for (int i = 0; i < tags.size(); i++) {
 						String tag = tags.get(i);
-						/*
-						if (hs.contains(tag)) {
-							continue;
-						}*/
-						tag = tag.toLowerCase();
-					    StringTokenizer st = new StringTokenizer(tags.get(i));
-					    if (st.countTokens() > 1) {
-					    	while (st.hasMoreTokens()) {
-					    		String token = st.nextToken();
-					    		hm.put(token, (double) token.hashCode());
-					    	}
-					    }
-						hm.put(tag, (double) tag.hashCode());
+						
+						if (hm.containsKey(tag)){
+							hm.put(tag,hm.get(tag)+1.0);
+						}
+						
 					}
 					return hm;
+				
 				}
     	};
+    	
+    	
     	KMeansClusterer<Topic> kmc = new KMeansClusterer<Topic>(featureExtractor, 30, 1, true, 10.0);
     	
-    	List<Topic> topics = Topic.all().fetch();
-    	HashSet<Topic> hs = new HashSet<Topic>(topics);
+    	
     	
     	Set<Set<Topic> > topicClusters = kmc.cluster(hs);
     	Iterator<Set<Topic> > topicClusterIter = topicClusters.iterator();
@@ -371,5 +375,30 @@ public class RecommendationEngine extends Controller{
     		
     		System.out.println();
     	}
+    }
+    
+    private static HashMap<String, Double> createHashMap(HashSet topics){
+    	HashMap<String, Double> master = new HashMap<String, Double>();
+    	Iterator<Topic> it = topics.iterator();
+    	while(it.hasNext()){
+    		//Insert all the tags into the master map if they are not already present
+    		for (String tag : it.next().tags){
+    			if(!master.containsKey(tag)){
+    				tag = tag.toLowerCase();
+    				StringTokenizer st = new StringTokenizer(tag);
+    				if (st.countTokens() > 1) {
+    					while (st.hasMoreTokens()) {
+    						String token = st.nextToken();
+    						
+    						if(!master.containsKey(token)){
+    						master.put(token,0.0);
+    						}
+    					}
+    				}
+    				master.put(tag, 0.0);
+    			}
+    		}	
+    	}
+    return master;
     }
 }
