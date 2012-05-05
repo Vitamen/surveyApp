@@ -93,7 +93,7 @@ public class RSSEngine {
 			                topic.feed = feed;
 			                topic.save();
 			                List<Topic> topics = Topic.findAll();
-			    			System.out.println("@#$%^&*(*&^%$#@        "+topics.size());
+			    			
 		                } else {
 		                	break;
 		                }

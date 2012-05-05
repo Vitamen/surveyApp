@@ -33,7 +33,19 @@ public class StaticData {
 		"http://feeds.cbsnews.com/CBSNewsMain",
 		"http://feeds.feedburner.com/EducationWeekCurriculumAndLearning",
 		"http://feeds.eonline.com/eonline/celebnews",
-		"http://rss.firstshowing.net/firstshowing"
+		"http://rss.firstshowing.net/firstshowing",
+		
+		//Added :AJ
+		"http://feeds.bbci.co.uk/news/rss.xml",
+		"http://feeds.bbci.co.uk/news/education/rss.xml",
+		"http://feeds.bbci.co.uk/news/science_and_environment/rss.xml",
+		"http://feeds.bbci.co.uk/news/business/rss.xml",
+		"http://feeds.bbci.co.uk/news/health/rss.xml",
+		
+		//Added :AJ
+		"http://www.reddit.com/.rss"
+		
+		
 	};
 	
 	public static String[] feedImageUrls = {
@@ -68,7 +80,17 @@ public class StaticData {
 		"http://microwaveadvances.com/television%20logos/cbs.png",
 		"http://profile.ak.fbcdn.net/hprofile-ak-snc4/41565_5887538795_5127_q.jpg",
 		"http://a2.twimg.com/profile_images/1669862831/elog_reasonably_small.jpg",
+		"http://widgets.markosweb.com/sb/new/f/i/r/firstshowing.net.gif",
+		
+		
+		//REMOVE THERE
+		"http://images.seroundtable.com/yahoo-slurp-1316437281.png",
+		"http://microwaveadvances.com/television%20logos/cbs.png",
+		"http://profile.ak.fbcdn.net/hprofile-ak-snc4/41565_5887538795_5127_q.jpg",
+		"http://a2.twimg.com/profile_images/1669862831/elog_reasonably_small.jpg",
+		"http://widgets.markosweb.com/sb/new/f/i/r/firstshowing.net.gif",
 		"http://widgets.markosweb.com/sb/new/f/i/r/firstshowing.net.gif"
+		
 	};
 
 	public static String[] feedNames = {
@@ -103,7 +125,14 @@ public class StaticData {
 		"CBS_News",
 		"Education_Week",
 		"E!_Online_Celebrity_News",
-		"First_Showing_Movie_News"
+		"First_Showing_Movie_News",
+		
+		"BBCTop",
+		"BBCEducation",
+		"BBCScience",
+		"BBCBusiness",
+		"BBCHealth",
+		"Reddit"
 	};
 	public static String[] feedCategories = {"Technology", 
 		"Local",
@@ -136,7 +165,16 @@ public class StaticData {
 		"Generic",
 		"Education",
 		"Celebrities",
-		"Movies"
+		"Movies",
+		
+		"News",
+		"Education",
+		"Science",
+		"Business",
+		"Health",
+		
+		"Social"
+		
 	};
 	
 }

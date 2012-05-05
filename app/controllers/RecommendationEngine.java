@@ -18,6 +18,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jsoup.Jsoup;
@@ -31,6 +32,8 @@ import com.sun.cnpi.rss.elements.Rss;
 import com.sun.cnpi.rss.parser.RssParser;
 import com.sun.cnpi.rss.parser.RssParserException;
 import com.sun.cnpi.rss.parser.RssParserFactory;
+
+import extractor.extractorThread;
 
 import models.Choice;
 import models.Feed;
@@ -59,16 +62,20 @@ public class RecommendationEngine extends Controller{
 		
 		//System.out.println(topics.size());
 		
-		/*
+		
 		LikeGroup.generateLikeGroupsFromStaticArray();
 		Application.generateFeeds();
 		RSSEngine.fetchNews();
 		System.out.println("FOO ");
 		List<Topic> topics = Topic.all().fetch();
+        ArrayBlockingQueue<Topic> bq  = new ArrayBlockingQueue(topics.size(),true);
+        
+        
 		for (int i = 0; i < topics.size(); i++) {
-			addTagsToTopic(topics.get(i));
+			//addTagsToTopic(topics.get(i));
+			bq.add(topics.get(i));
 		}
-		*/
+		addTagsToAllTopics(bq);
 		
 		//runKMeans();
 		//runKMeans();
@@ -351,18 +358,22 @@ public class RecommendationEngine extends Controller{
     	
         try {
             int nrKeyphrases = 0;
-            StringTokenizer st = new StringTokenizer(topic.description);
-            int numberOfWords = st.countTokens();
-            nrKeyphrases = Math.max(5, Math.min(30, numberOfWords / 30));
+           
+
 
             EnglishKeyPhraseExtractor extractor = new EnglishKeyPhraseExtractor("data/English_KEModel_manualData",
                     "data/models/en_US/hub4_all.np.4g.hub97.1e-9.clm",
                     "data/models/en_US/left3words-wsj-0-18.tagger",
                     "data/stopwords/stopwords_en.txt");
            
+            StringTokenizer st = new StringTokenizer(topic.description);
+            int numberOfWords = st.countTokens();
+            nrKeyphrases = Math.max(5, Math.min(30, numberOfWords / 30));
             String[] texts = new String[]{
             		Jsoup.parse(topic.description).text()
             };
+            
+            
             for (KeyPhrase keyPhrase : extractor.getKeyphrases(nrKeyphrases, Arrays.asList(texts))) {
                 System.out.println("Got keyphrase: "+keyPhrase.getKeyPhrase());
                 
@@ -380,6 +391,38 @@ public class RecommendationEngine extends Controller{
         }
         return 0;
     }
+    
+    
+    
+    public static int addTagsToAllTopics(ArrayBlockingQueue<Topic> bq ) {
+		
+    	   try {
+			EnglishKeyPhraseExtractor extractor = new EnglishKeyPhraseExtractor("data/English_KEModel_manualData",
+			           "data/models/en_US/hub4_all.np.4g.hub97.1e-9.clm",
+			           "data/models/en_US/left3words-wsj-0-18.tagger",
+			           "data/stopwords/stopwords_en.txt");
+			
+			for (int i=0 ; i<3 ; i++){
+				extractorThread extr = new extractorThread(extractor,bq);
+				extr.doJob();
+				extractorThread extr2 = new extractorThread(extractor,bq);
+				extr2.doJob();
+				extractorThread extr3 = new extractorThread(extractor,bq);
+				extr3.doJob();
+			}
+			
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	   
+    	   
+    	
+    	return 0;
+    }
+    
+    
     
     public static void runKMeans() {
     	
@@ -417,7 +460,7 @@ public class RecommendationEngine extends Controller{
     	};
     	
     	
-    	KMeansClusterer<Topic> kmc = new KMeansClusterer<Topic>(featureExtractor, 70, 100, true, 10.0);
+    	KMeansClusterer<Topic> kmc = new KMeansClusterer<Topic>(featureExtractor, 30, 990000, true, 0.8);
     	
     	
     	
@@ -453,7 +496,7 @@ public class RecommendationEngine extends Controller{
     		}
 
     		for (String item : hmp.keySet()){
-    		//	System.out.println(item + " " + hmp.get(item));
+    		
     		}
     		System.out.println();
     	}
