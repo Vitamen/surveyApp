@@ -72,11 +72,12 @@ public class Application extends Controller {
             Session.current().put("user", user.userId);
             StringBuffer queryPart = new StringBuffer(user.userId+"/friends");
             
-    		JsonArray friends = FbGraph.getConnection(queryPart.toString(), Parameter.with("access_token", "AAACEdEose0cBAGBMNXT6Bo0d6v6ynmXk8RtCXER9pzPNOAbPEO5nqSNAFhmZCINNc4rBfsuklwkmH2tLVymNTlZBP38GYlcdpl016E9QZDZD").parameters());
+    		JsonArray friends = FbGraph.getConnection(queryPart.toString());
     		System.out.println("*****************Friends returned");
     		ArrayList<String> names = new ArrayList<String>();
     		for(int i = 0; i< friends.size(); i++)
     		{
+    			
     			JsonObject obj = friends.get(i).getAsJsonObject();
     			String name = obj.get("name").toString();
     			name=name.replaceAll("\"", "");
@@ -86,7 +87,7 @@ public class Application extends Controller {
     		
     		System.out.println("Putting friends in the renderArgs method");
     		renderArgs.put("allFriends", names);
-            
+            renderArgs.put("FriendsJsonArray", friends);
             // do useful things
             Session.current().put("username", "xxx"); // put the email into the session (for the Secure module)
         } catch (FbGraphException fbge) {

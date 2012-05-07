@@ -5,16 +5,12 @@
 
 
 <div class = "container">
-	
 	<form class="form-inline">
-	
 	<label>Select a friend to generate conversation topics ${allFriends.get(0)}</label>
-		
 		<select>
 			%{
-				for (int i =0; i<allFriends.size(); i++)
-				{
-				   out.print('<option>'+allFriends.get(i)+'</option>');
+				for (int i =0; i<FriendsJsonArray.size(); i++)
+				   out.print('<option>'+FriendsJsonArray.get(i).getAsJsonObject().get("name").toString().replaceAll("\"","")+'</option>');
 				}
 			}%
 		</select>
