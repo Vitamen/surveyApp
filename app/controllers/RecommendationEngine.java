@@ -25,6 +25,8 @@ import org.jsoup.Jsoup;
 
 import com.aliasi.chunk.Chunk;
 import com.aliasi.cluster.KMeansClusterer;
+import com.aliasi.io.LogLevel;
+import com.aliasi.io.Reporter;
 import com.aliasi.util.FeatureExtractor;
 import com.google.gson.JsonObject;
 import com.sun.cnpi.rss.elements.Item;
@@ -36,6 +38,7 @@ import com.sun.cnpi.rss.parser.RssParserFactory;
 import extractor.extractorThread;
 
 import models.Choice;
+import models.Cluster;
 import models.Feed;
 import models.LikeFrequency;
 import models.LikeFrequencyComparator;
@@ -63,7 +66,7 @@ public class RecommendationEngine extends Controller{
 		//System.out.println(topics.size());
 		
 		
-		LikeGroup.generateLikeGroupsFromStaticArray();
+		//LikeGroup.generateLikeGroupsFromStaticArray();
 		Application.generateFeeds();
 		RSSEngine.fetchNews();
 		System.out.println("FOO ");
@@ -73,9 +76,9 @@ public class RecommendationEngine extends Controller{
         
 		for (int i = 0; i < topics.size(); i++) {
 			//addTagsToTopic(topics.get(i));
-			bq.add(topics.get(i));
+			//bq.add(topics.get(i));
 		}
-		addTagsToAllTopics(bq);
+		//addTagsToAllTopics(bq);
 		
 		//runKMeans();
 		//runKMeans();
@@ -434,7 +437,8 @@ public class RecommendationEngine extends Controller{
     	FeatureExtractor<Topic> featureExtractor = new FeatureExtractor<Topic>() {
 				@Override
 				public Map<String, ? extends Number> features(Topic topic) {
-					HashMap<String, Double> hm = (HashMap<String, Double>) master.clone();
+					HashMap<String, Double> hm = new HashMap<String, Double>(master);
+			
 					List<Tag> tags = topic.tags;
 					
 					//TODO : Can be further optimized by tokenizing the tags and setting them to 1 aswell
@@ -460,46 +464,15 @@ public class RecommendationEngine extends Controller{
     	};
     	
     	
-    	KMeansClusterer<Topic> kmc = new KMeansClusterer<Topic>(featureExtractor, 30, 990000, true, 0.8);
+    	KMeansClusterer<Topic> kmc = new KMeansClusterer<Topic>(featureExtractor,8, 100, true,0.9);
     	
     	
     	
     	Set<Set<Topic> > topicClusters = kmc.cluster(hs);
-    	Iterator<Set<Topic> > topicClusterIter = topicClusters.iterator();
-    	int sizeOfMaxCluster = 30;
+    	clusterHelper(kmc.cluster(hs),kmc);
     	
-    	while(topicClusterIter.hasNext()) {
-    		Set<Topic> topicCluster = topicClusterIter.next();
-    		if (topicCluster.size() > sizeOfMaxCluster) {
-    			
-    		}
-    		Iterator<Topic> topicIter = topicCluster.iterator();
-    		System.out.println();
-    		System.out.println("NEW CLUSTER: ");
-    		HashMap<String,Integer> hmp = new HashMap<String,Integer>();
-    		while(topicIter.hasNext()) {
-    			Topic nextTopic = topicIter.next();
-    			
-    			//Make a tally to find the most popular keyword in each cluster
-    			for (Tag t :nextTopic.tags){
-    				if (hmp.containsKey(t.name)){
-    					hmp.put(t.name, hmp.get(t.name)+1);
-    				}
-    				else{
-    					hmp.put(t.name,0);
-    				}
-    				System.out.print(t.name + ",");
-    			}
-    			//System.out.println(nextTopic.tags);
-    			System.out.println();
-    			//
-    		}
-
-    		for (String item : hmp.keySet()){
-    		
-    		}
-    		System.out.println();
-    	}
+    	System.out.println("ENDED");
+    	//render();
     }
     
     private static HashMap<String, Double> createHashMap(HashSet topics){
@@ -528,4 +501,71 @@ public class RecommendationEngine extends Controller{
     	}
     	return master;
     }
+
+    /*
+     * We want to take the origional clusters and recluster again and again
+     * Till we have n buckets with no bucket having more than k items.
+     * 
+     */
+    private static void clusterHelper(Set<Set<Topic> > topicClusters , KMeansClusterer<Topic> kmc){
+
+    	//Purge all old clusters
+    	//Figure out Cascade
+    	
+    	Cluster.findAll().clear();
+    	
+
+    	
+    	Iterator<Set<Topic>> topicClusterIter = topicClusters.iterator();
+    	int sizeOfMaxCluster = 100;
+
+    	while(topicClusterIter.hasNext()) {
+    		Set<Topic> topicCluster = topicClusterIter.next();
+    		
+    		if (topicCluster.size() > sizeOfMaxCluster) {
+    			System.out.println("Cluster Junked");
+    			clusterHelper(kmc.cluster(topicCluster),kmc);
+    		}
+    		else{
+    			//retainedClusters.add(topicCluster);
+    			//ADD CLUSTER TO DATABASE
+    			Cluster c = new Cluster();
+    			c.topics = new ArrayList<Topic>();
+    			c.topics.addAll(topicCluster);
+    			c.save();
+    			
+//    			Iterator<Topic> topicIter = topicCluster.iterator();
+//    			System.out.println();
+//    			System.out.println("NEW CLUSTER: ");
+//    			HashMap<String,Integer> hmp = new HashMap<String,Integer>();
+//    			while(topicIter.hasNext()) {
+//    				Topic nextTopic = topicIter.next();
+//
+//    				//    			//Make a tally to find the most popular keyword in each cluster
+//    				//    			for (Tag t :nextTopic.tags){
+//    				//    				if (hmp.containsKey(t.name)){
+//    				//    					hmp.put(t.name, hmp.get(t.name)+1);
+//    				//    				}
+//    				//    				else{
+//    				//    					hmp.put(t.name,0);
+//    				//    				}
+//    				//    				System.out.print(t.name + ",");
+//    				//    			}
+//
+//    				System.out.println();
+//    			}
+    			
+    		}
+    		
+    	}
+    	
+    	
+    	
+    	return;
+    }
+
+    
+    
+    
 }
+

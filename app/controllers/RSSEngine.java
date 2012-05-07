@@ -56,6 +56,7 @@ public class RSSEngine {
 			Rss rss = rp.parse(new URL(feed.link));
 			
 			Collection items = rss.getChannel().getItems();
+			
 	        if(items != null && !items.isEmpty())
 	        {
 	        	Iterator i = items.iterator();

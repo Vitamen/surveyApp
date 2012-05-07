@@ -38,7 +38,7 @@ public static void dojob(Topic topic){
             };
             for (KeyPhrase keyPhrase : extractor.getKeyphrases(nrKeyphrases, Arrays.asList(texts))) {
                 System.out.println("Got keyphrase: "+keyPhrase.getKeyPhrase());
-            	topic.tags.add(keyPhrase.getKeyPhrase());
+            	//topic.tags.add(keyPhrase.getKeyPhrase());
             	topic.save();
             }
         } catch (Exception e) {
