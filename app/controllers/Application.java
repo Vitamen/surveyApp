@@ -5,8 +5,12 @@ import play.modules.facebook.FbGraph;
 import play.modules.facebook.FbGraphException;
 import play.modules.facebook.Parameter;
 import play.mvc.*;
+import play.mvc.Scope.RenderArgs;
 import play.mvc.Scope.Session;
 import play.test.Fixtures;
+import processing.MapManupilator;
+import processing.similarityAlgo;
+import sun.security.action.GetLongAction;
 
 import java.util.*;
 
@@ -18,19 +22,30 @@ import models.*;
 
 public class Application extends Controller {
 	
-	
-    public static void index() {
-    	generateFeeds();
+static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3Hixnmj7ya1MuzVkSWvNgRfpz4x0HnedYwXCdIj1jOvkw7ypnG1C8aq1HxFmgkMMxhkTV7";
+
+
+	public static void index() {
+    	
+		
+		//WTF IS ALL THIS SHIT , WHY DSNT IT SIMPLY LOAD A PAGE
+		//generateFeeds();
     	String currentUser = Session.current().get("user");
     	User user = User.find("byUserId", currentUser).first();
     	if (user != null) {
-    		RecommendationEngine.index();
+    		//RecommendationEngine.index();
+    		//If the user is logged in simply display the friends to start with
+    		displayFriends(user.userId);
     	} else {
     		render();
     	}
-    	render();
+    	//render();
     }
 
+	/*
+	 * This function will get the user likes json array and store the information to the database
+	 * 
+	 */
     public static boolean getUserLikes(){
     	User user = User.find("byUserId", Session.current().get("user")).first(); 
     	if (user == null) {
@@ -39,25 +54,61 @@ public class Application extends Controller {
     	try {
     		String userId = user.userId;
     		StringBuffer queryPart = new StringBuffer(userId+"/likes");
-		
-    		JsonArray userLikes = FbGraph.getConnection(queryPart.toString(), Parameter.with("access_token", "BAAFTZB1ThIZBQBACYExOvxBc569YgOr8YtjiETSbq8BkG6wnqegV2U8wCrEZBihZAGsU2h2wZBogtwTOAH5ZAb8QMY6qi6sHhviEHWHpIWjCxFFpHEdq0XOegD3LCNI4KMqrqwcjmCEwZDZD").parameters());
+    		JsonArray userLikes = FbGraph.getConnection(queryPart.toString(), Parameter.with("access_token",access_token).parameters());
     		System.out.println("User LIkes JSON Array size"+userLikes.size());
 			user.addAllLikes(userLikes);
+			
     	} catch (FbGraphException e) {
 			e.printStackTrace();
 		}
     	return true;
     }
     
-    public static void displayFriends(){
-    	getUserLikes();
-    	render();
+    
+    /*
+     * This method will now display a page with a simple system for the user to select a friend
+     */
+    public static void displayFriends(String userId){
+    	//Should try to change it so that it gets the user id from the session
+    	StringBuffer queryPart = new StringBuffer(userId+"/friends");
+        
+		JsonArray friends;
+		try {
+			friends = FbGraph.getConnection(queryPart.toString());
+			ArrayList<String> names = new ArrayList<String>();
+			for(int i = 0; i< friends.size(); i++)
+			{
+				
+				JsonObject obj = friends.get(i).getAsJsonObject();
+				String name = obj.get("name").toString();
+				name=name.replaceAll("\"", "");
+				names.add(name);
+			}
+			
+			Collections.sort(names);
+			System.out.println("Putting friends in the renderArgs method");
+			renderArgs.put("allFriends", names);
+	        renderArgs.put("FriendsJsonArray", friends);
+	        
+	        render();
+	        
+		} catch (FbGraphException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
     }
     
-    /* Facebook Session Stuff */
+    /* Facebook Session Stuff
+     * 
+     *  ^That is not fucking commenting 
+     *  This method should do NOTHING BUT manage user Login and session state
+     *
+     */
     public static void facebookLogin() {
         try {
-            JsonObject profile = FbGraph.getObject("me"); // fetch the logged in user
+            JsonObject profile = FbGraph.getObject("me");
+            // fetch the logged in user
             List<User> userList = User.find("byUserId", profile.get("id").toString().replaceAll("\"", "")).fetch();
             User user;
             
@@ -70,26 +121,11 @@ public class Application extends Controller {
             
     		 
             Session.current().put("user", user.userId);
-            StringBuffer queryPart = new StringBuffer(user.userId+"/friends");
             
-    		JsonArray friends = FbGraph.getConnection(queryPart.toString());
-    		System.out.println("*****************Friends returned");
-    		ArrayList<String> names = new ArrayList<String>();
-    		for(int i = 0; i< friends.size(); i++)
-    		{
-    			
-    			JsonObject obj = friends.get(i).getAsJsonObject();
-    			String name = obj.get("name").toString();
-    			name=name.replaceAll("\"", "");
-    			names.add(name);
-    		}
-    		Collections.sort(names);
-    		
-    		System.out.println("Putting friends in the renderArgs method");
-    		renderArgs.put("allFriends", names);
-            renderArgs.put("FriendsJsonArray", friends);
-            // do useful things
-            Session.current().put("username", "xxx"); // put the email into the session (for the Secure module)
+            //Call the page with the friends list
+            displayFriends(user.userId);
+            
+            
         } catch (FbGraphException fbge) {
         	System.out.println("ERROORRRRR ********** NOOOOOOO");
             flash.error(fbge.getMessage());
@@ -97,28 +133,22 @@ public class Application extends Controller {
                 Session.current().remove("username");
             }
         }
-        RecommendationEngine.fetchNews();
-        System.out.println("Hitting this");
-           
-        System.out.println("From Application.facebookLogin()");
-        Choice choice = new Choice();
-      
-       List<Recommendation> list=RecommendationEngine.generateChoiceOfSize(3).recommendations;
-       for (int i = 0; i < list.size(); i++){
-    	   choice.recommendations.add(list.get(i));
-       }
        
-       System.out.println("Size of recommendation list "+list.size());
-       renderArgs.put("choice", choice);
+//       Choice choice = new Choice();
+//       List<Recommendation> list=RecommendationEngine.generateChoiceOfSize(3).recommendations;
+//       for (int i = 0; i < list.size(); i++){
+//    	   choice.recommendations.add(list.get(i));
+//       }
+       
+      // System.out.println("Size of recommendation list "+list.size());
+       //renderArgs.put("choice", choice);
        //The class cast exception happens when you are passing the Choice object from the Applicaiton.java to Recommendation.java
        
        //Rendering template
-       
-       renderTemplate("Recommendation/verticalTopics.html");
-
-       
+       //renderTemplate("Recommendation/verticalTopics.html");
     }
 
+ 
     public static void facebookLogout() {
         Session.current().remove("user");
         FbGraph.destroySession();
@@ -170,7 +200,7 @@ public class Application extends Controller {
     
     public static void getRSSFeeds(String userId) {
     	System.out.println("Request for "+ userId);
-    	getRSSFeedsWithAuthToken(userId, "BAAFTZB1ThIZBQBACYExOvxBc569YgOr8YtjiETSbq8BkG6wnqegV2U8wCrEZBihZAGsU2h2wZBogtwTOAH5ZAb8QMY6qi6sHhviEHWHpIWjCxFFpHEdq0XOegD3LCNI4KMqrqwcjmCEwZDZD");
+    	getRSSFeedsWithAuthToken(userId, access_token);
     }
     
     public static void getRSSFeedsWithAuthToken(String userId, String auth_token){
@@ -273,4 +303,186 @@ public class Application extends Controller {
     public void testRequest(){
     	renderJSON("Please Place Json String here");
     }
+    
+    
+    /*
+     * 
+     * I WAS NOT ABLE TO UNDERSTAND SOME OLDER CODE
+     * I ALSO DID NOT WANT TO BREAK IT SO COPIED SOME OF IT BELOW in the second function
+     * 
+     */
+    public static void friendSelected(String friendName){
+    	
+    	System.out.println("CURRENT USER LIKES");
+    	
+    	//We want to create a hashmap of user likes 
+    	HashMap<String, Double> currentUserLikeMap = getLikesMap(Session.current().get("user"));
+    	
+    	//We want to create a hashmap of friends likes
+    	HashMap<String, Double> friendUserLikeMap = getLikesMap(friendName);
+
+  
+		similarityAlgo sm = new similarityAlgo();
+		MapManupilator mapMP = new MapManupilator();
+		
+		//GEnerate common user likes or marger get get union of likes if no common
+		
+		HashMap<String, Double> userLikeMap;
+		HashMap<String, Double> tempMap;
+		
+		userLikeMap = mapMP.mergeHashMaps(currentUserLikeMap, friendUserLikeMap);
+		tempMap = mapMP.intersectHashMaps(currentUserLikeMap, friendUserLikeMap);
+		
+		if(tempMap.size() > 5){
+			userLikeMap = tempMap;
+			System.out.println("INTERSECTION");
+		}
+		
+		System.out.println("Size: " + userLikeMap);
+		
+		//System.out.println("Similar" + sm.cosine_similarity(friendUserLikeMap, currentUserLikeMap));
+    	
+		//We now have all the user like infromation extracted and want to reccomend somehting 
+		//User cos similarity and the clusters to layout the items.
+		
+		
+		
+		if (Cluster.count() < 5){
+			System.out.println("THERE ARE SOME ERROR DUDE");
+		}else{
+			
+			//THIS SHOULD BE IN PERSISTANT STORE , IT IS STUPID TO DO THIS EVERYTIME
+			//This was the quickest way to get this fucntion working.
+			
+			//Create Cluster Mapping Vecotr
+			HashMap<String, HashMap<String, Double>> clusterConfidenceMaps = new HashMap<String,HashMap<String, Double>>();
+			
+			//Fill it with a map for each cluster
+			List<Cluster> allClusters = Cluster.findAll();
+			for(Cluster c : allClusters){
+					clusterConfidenceMaps.put(c.id.toString(),mapMP.createFrequencyMap(c));
+			}
+			
+			//Run COS similarity on each maps
+			HashMap<String, Double> cosSimilarities = new HashMap<String,Double>();
+			for( String id:clusterConfidenceMaps.keySet()){
+				cosSimilarities.put(id, sm.cosine_similarity(userLikeMap, clusterConfidenceMaps.get(id)));
+			}
+			
+			//Print all cos values:
+			Double max = 0.0;
+			long maxid = 0;
+			for(String id: cosSimilarities.keySet()){
+				if (cosSimilarities.get(id) > max){
+					max = cosSimilarities.get(id);
+					maxid = Long.parseLong(id);
+				}
+				System.out.println(cosSimilarities.get(id));
+			}
+			
+			Cluster x = Cluster.findById(maxid);
+			//System.out.println(x.topics.get(0).description);
+			  Random randomGenerator = new Random();
+			      int randomTopic = randomGenerator.nextInt((int) (Topic.count()-1));
+			     
+			  
+			     List<Topic> allTopics = Topic.findAll();
+			      
+			System.out.println(x.topics.get(x.topics.size()-1).description);
+			
+			//TOPIC 1
+			String title = allTopics.get(randomTopic).title;
+			renderArgs.put("t1t",title);
+			String desc = allTopics.get(randomTopic).description;
+			renderArgs.put("t1d",desc);
+			
+			
+			//TOPIC 2 is the computed Topic
+			int generatedTopic = randomGenerator.nextInt(x.topics.size()-1);
+			String title2 = x.topics.get(generatedTopic).title;
+			renderArgs.put("t2t",title2);			
+			String desc2 = x.topics.get(generatedTopic).description;
+			renderArgs.put("t2d",desc2);
+			
+			//Generate new random
+			randomTopic = randomGenerator.nextInt((int) (Topic.count()-1));
+			
+			//TOPIC 3
+			String title3 = allTopics.get(randomTopic).title;
+			renderArgs.put("t3t",title3);
+			String desc3 = allTopics.get(randomTopic).description;
+			renderArgs.put("t3d",desc3);
+	       
+	       //Rendering template
+	       //renderTemplate("Recommendation/verticalTopics.html");		
+			render();
+
+		}
+		
+    }
+    
+    
+    /*
+     * This method takes a user and returns a hashmaps of <Words in likes, frequency of words >
+     * 
+     */
+    private static HashMap<String, Double> getLikesMap(String uid){
+
+    	HashMap <String,Double> likesMap = new HashMap<String, Double>(); 
+    	
+    	//Check user id not null
+    	if (uid == null) {
+    		return likesMap;
+    	}
+    	//Get user and process likes to create a vector
+    	try {
+
+    		//Fetch like data for User
+    		StringBuffer queryPart = new StringBuffer(uid+"/likes");
+    		JsonArray allLikes = FbGraph.getConnection(queryPart.toString());//, Parameter.with("access_token", access_token).parameters());
+    		
+    		//If any liks available process the words
+    		if (allLikes != null){
+    			for (int i = 0; i < allLikes.size(); i++)
+    			{
+    				JsonObject tempJsonObject = (JsonObject)allLikes.get(i);
+    				
+    				//Get like words and phrases
+    				String category = tempJsonObject.get("category").toString().replaceAll("\"", "");
+    				String name = tempJsonObject.get("name").toString().replaceAll("\"", "");
+    				String id = tempJsonObject.get("id").toString().replaceAll("\"", "");
+    				
+    				//Add the entire name first and then the tokenize the name and add all componenets
+    				if(!likesMap.containsKey(category)){
+						likesMap.put(category,1.0);
+					}
+    			
+    				//Add all the words in the like to the hashmap 
+    				StringTokenizer st = new StringTokenizer(name + " " + category);
+    				while(st.hasMoreTokens()){
+    					String nextToken = st.nextToken();
+    					
+    					//If already present then get increment count or jsut put and count = 1.0
+    					if(!likesMap.containsKey(nextToken)){
+    						likesMap.put(nextToken,1.0);
+    					}
+    					else{
+    						likesMap.put(nextToken, likesMap.get(nextToken) + 1.0);
+    					}
+    				}
+    			}
+    		}
+    	} 
+    	catch (FbGraphException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	//Return map if empty or with words from the likes mapped to count.
+    	return likesMap;
+    }
+
+
+
+
+
 }

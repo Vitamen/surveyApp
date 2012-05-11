@@ -76,11 +76,11 @@ public class RecommendationEngine extends Controller{
         
 		for (int i = 0; i < topics.size(); i++) {
 			//addTagsToTopic(topics.get(i));
-			//bq.add(topics.get(i));
+			bq.add(topics.get(i));
 		}
-		//addTagsToAllTopics(bq);
+		addTagsToAllTopics(bq);
 		
-		//runKMeans();
+		runKMeans();
 		//runKMeans();
 		/* Set up stuff */
 		
@@ -442,7 +442,7 @@ public class RecommendationEngine extends Controller{
 					List<Tag> tags = topic.tags;
 					
 					//TODO : Can be further optimized by tokenizing the tags and setting them to 1 aswell
-					for (int i = 1; i < tags.size(); i++) {
+					for (int i = 0; i < tags.size(); i++) {
 						Tag tag = tags.get(i);
 						StringTokenizer st = new StringTokenizer(tag.name);
 	    				if (st.countTokens() > 1) {
@@ -464,11 +464,18 @@ public class RecommendationEngine extends Controller{
     	};
     	
     	
-    	KMeansClusterer<Topic> kmc = new KMeansClusterer<Topic>(featureExtractor,8, 100, true,0.9);
+    	KMeansClusterer<Topic> kmc = new KMeansClusterer<Topic>(featureExtractor,20,10000, true,0.9);
     	
+
+    	//Set<Set<Topic> > topicClusters = kmc.cluster(hs);
     	
+    	List<Cluster> c = Cluster.findAll();
+    	for (Cluster item : c){
+    		item.topics.clear();
+    		item.save();
+    	}
+    	Cluster.findAll().clear();
     	
-    	Set<Set<Topic> > topicClusters = kmc.cluster(hs);
     	clusterHelper(kmc.cluster(hs),kmc);
     	
     	System.out.println("ENDED");
@@ -511,22 +518,25 @@ public class RecommendationEngine extends Controller{
 
     	//Purge all old clusters
     	//Figure out Cascade
+    	//Cluster.deleteAll();
     	
-    	Cluster.findAll().clear();
+    
+    	//Cluster.findAll().
     	
-
     	
     	Iterator<Set<Topic>> topicClusterIter = topicClusters.iterator();
-    	int sizeOfMaxCluster = 100;
+    	int sizeOfMaxCluster = 300;
 
     	while(topicClusterIter.hasNext()) {
     		Set<Topic> topicCluster = topicClusterIter.next();
     		
     		if (topicCluster.size() > sizeOfMaxCluster) {
-    			System.out.println("Cluster Junked");
-    			clusterHelper(kmc.cluster(topicCluster),kmc);
+    			//System.out.println("Cluster Junked");
+    			//System.out.println("Num Topics: " +  topicCluster.size());
+    			//clusterHelper(kmc.cluster(topicCluster),kmc);
+    			
     		}
-    		else{
+    		//else{
     			//retainedClusters.add(topicCluster);
     			//ADD CLUSTER TO DATABASE
     			Cluster c = new Cluster();
@@ -555,8 +565,7 @@ public class RecommendationEngine extends Controller{
 //    				System.out.println();
 //    			}
     			
-    		}
-    		
+    		//}
     	}
     	
     	

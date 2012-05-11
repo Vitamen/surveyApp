@@ -4,14 +4,16 @@
 
 
 
-<div class = "container">
-	<form class="form-inline">
+ <div class = "container">
+
+/*
+	<form class="form-inline" action="@{Application.friendSelected()}">
 	<label>Select a friend to generate conversation topics ${allFriends.get(0)}</label>
-		<select>
+		<select name="friendName">
 			%{
 				for (int i =0; i<FriendsJsonArray.size(); i++)
-				   out.print('<option>'+FriendsJsonArray.get(i).getAsJsonObject().get("name").toString().replaceAll("\"","")+'</option>');
-				}
+				   out.print("<option value=" + FriendsJsonArray.get(i).getAsJsonObject().get('id').toString() + ">" +FriendsJsonArray.get(i).getAsJsonObject().get("name").toString().replaceAll("\"","")+'</option>');
+				
 			}%
 		</select>
 		<button type="submit" class="btn">Select Friend</button>
@@ -71,7 +73,8 @@
 	String finalContentC = newContentC.toString();
 	
 }%
-	
+ */
+
 <div class="well">
 		<form class="form-inline">
 			<img src="@{'public/images/favicon.png'}"/><b>${topicA.title}</b>

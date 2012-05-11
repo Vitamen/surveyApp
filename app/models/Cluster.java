@@ -15,7 +15,7 @@ public class Cluster extends Model {
 
 	public String name;
 	
-	@OneToMany(fetch=FetchType.EAGER,cascade={CascadeType.ALL})
+	@OneToMany(fetch=FetchType.EAGER,cascade={CascadeType.REMOVE,CascadeType.ALL})
 	public List<Topic> topics;
 	
 	//public Map<String,Integer> CategoryCount;
