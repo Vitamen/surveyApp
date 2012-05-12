@@ -339,6 +339,11 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
 			System.out.println("INTERSECTION");
 		}
 		
+//		for (String k : likesMap.keySet()){
+//    		if (mapMP.stopWordChecker(k)){
+//    			likesMap
+//    		}
+//    	}
 		System.out.println("Size: " + userLikeMap);
 		
 		//System.out.println("Similar" + sm.cosine_similarity(friendUserLikeMap, currentUserLikeMap));
@@ -438,6 +443,7 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
 
     		//Fetch like data for User
     		StringBuffer queryPart = new StringBuffer(uid+"/likes");
+    		System.out.println("Query : " + queryPart.toString());
     		JsonArray allLikes = FbGraph.getConnection(queryPart.toString());//, Parameter.with("access_token", access_token).parameters());
     		
     		//If any liks available process the words
@@ -475,6 +481,9 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
     	catch (FbGraphException e) {
     		e.printStackTrace();
     	}
+    	
+    	//Remove Stopwrods 
+    	
     	
     	//Return map if empty or with words from the likes mapped to count.
     	return likesMap;
