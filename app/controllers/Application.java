@@ -341,11 +341,7 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
 		
 		//Remove the stopwords , aka common words
 		//Optimize this so that the words dont get putin in the first place
-		for (String k : userLikeMap.keySet()){
-    		if (mapMP.stopWordChecker(k)){
-    			userLikeMap.remove(k);
-    		}
-    	}
+		
 		
 		
 		System.out.println("Size: " + userLikeMap);
@@ -444,6 +440,7 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
     	//Get user and process likes to create a vector
     	try {
 
+    		MapManupilator mapMP = new MapManupilator();
     		//Fetch like data for User
     		StringBuffer queryPart = new StringBuffer(uid+"/likes");
     		System.out.println("Query : " + queryPart.toString());
@@ -472,7 +469,10 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
     					
     					//If already present then get increment count or jsut put and count = 1.0
     					if(!likesMap.containsKey(nextToken)){
-    						likesMap.put(nextToken,1.0);
+    						if(!mapMP.stopWordChecker(nextToken)){
+    							likesMap.put(nextToken,1.0);
+    						}
+    						
     					}
     					else{
     						likesMap.put(nextToken, likesMap.get(nextToken) + 1.0);
