@@ -400,7 +400,7 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
 			String title = allTopics.get(randomTopic).title;
 			renderArgs.put("t1t",title);
 			String desc = allTopics.get(randomTopic).description;
-			renderArgs.put("t1d",desc);
+			renderArgs.put("t1d",desc.toString());
 			
 			String title2;
 			String desc2;
