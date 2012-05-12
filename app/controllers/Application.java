@@ -14,6 +14,8 @@ import sun.security.action.GetLongAction;
 
 import java.util.*;
 
+import org.jsoup.Jsoup;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -398,14 +400,14 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
 			String title = allTopics.get(randomTopic).title;
 			renderArgs.put("t1t",title);
 			String desc = allTopics.get(randomTopic).description;
-			renderArgs.put("t1d",desc);
+			renderArgs.put("t1d",Jsoup.parse(desc));
 			
 			//TOPIC 2 is the computed Topic
 			int generatedTopic = randomGenerator.nextInt(x.topics.size());
 			String title2 = x.topics.get(generatedTopic).title;
 			renderArgs.put("t2t",title2);			
 			String desc2 = x.topics.get(generatedTopic).description;
-			renderArgs.put("t2d",desc2);
+			renderArgs.put("t2d",Jsoup.parse(desc2));
 			
 			//Generate new random
 			randomTopic = randomGenerator.nextInt((int) (Topic.count()-1));
@@ -414,7 +416,7 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
 			String title3 = allTopics.get(randomTopic).title;
 			renderArgs.put("t3t",title3);
 			String desc3 = allTopics.get(randomTopic).description;
-			renderArgs.put("t3d",desc3);
+			renderArgs.put("t3d",Jsoup.parse(desc3));
 	       
 	       //Rendering template
 	       //renderTemplate("Recommendation/verticalTopics.html");		
