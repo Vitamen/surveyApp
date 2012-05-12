@@ -469,19 +469,19 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
     				String id = tempJsonObject.get("id").toString().replaceAll("\"", "");
     				
     				//Add the entire name first and then the tokenize the name and add all componenets
-    				if(!likesMap.containsKey(category)){
-						likesMap.put(category,1.0);
-					}
+    				//if(!likesMap.containsKey(category)){
+						category = category.replace("/", " ");
+					//}
     			
     				//Add all the words in the like to the hashmap 
-    				StringTokenizer st = new StringTokenizer(name);
+    				StringTokenizer st = new StringTokenizer(name + " " + category);
     				while(st.hasMoreTokens()){
     					String nextToken = st.nextToken();
     					
     					//If already present then get increment count or jsut put and count = 1.0
     					if(!likesMap.containsKey(nextToken)){
     						if(!mapMP.stopWordChecker(nextToken)){
-    							likesMap.put(nextToken,5.0);
+    							likesMap.put(nextToken,3.0);
     						}
     						
     					}
