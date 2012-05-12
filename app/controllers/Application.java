@@ -321,20 +321,20 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
     	
     	//We want to create a hashmap of friends likes
     	HashMap<String, Double> friendUserLikeMap = getLikesMap(friendName);
-    	System.out.println("Friend like map Size : " + currentUserLikeMap.size() );
+    	System.out.println("Friend like map Size : " + friendUserLikeMap.size() );
     	
 		similarityAlgo sm = new similarityAlgo();
 		MapManupilator mapMP = new MapManupilator();
 		
-		//GEnerate common user likes or marger get get union of likes if no common
-		
+		//Generate common user likes or marger get get union of likes if no common
 		HashMap<String, Double> userLikeMap;
 		HashMap<String, Double> tempMap;
 		
 		userLikeMap = mapMP.mergeHashMaps(currentUserLikeMap, friendUserLikeMap);
+		
 		tempMap = mapMP.intersectHashMaps(currentUserLikeMap, friendUserLikeMap);
 		
-		if(tempMap.size() > 5){
+		if(tempMap.keySet().size() > 5){
 			userLikeMap = tempMap;
 			System.out.println("INTERSECTION");
 		}
