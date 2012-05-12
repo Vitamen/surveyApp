@@ -463,14 +463,14 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
 					}
     			
     				//Add all the words in the like to the hashmap 
-    				StringTokenizer st = new StringTokenizer(name + " " + category);
+    				StringTokenizer st = new StringTokenizer(name);
     				while(st.hasMoreTokens()){
     					String nextToken = st.nextToken();
     					
     					//If already present then get increment count or jsut put and count = 1.0
     					if(!likesMap.containsKey(nextToken)){
     						if(!mapMP.stopWordChecker(nextToken)){
-    							likesMap.put(nextToken,1.0);
+    							likesMap.put(nextToken,5.0);
     						}
     						
     					}

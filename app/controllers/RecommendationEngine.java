@@ -442,7 +442,7 @@ public class RecommendationEngine extends Controller{
 					List<Tag> tags = topic.tags;
 					
 					//TODO : Can be further optimized by tokenizing the tags and setting them to 1 aswell
-					for (int i = 0; i < tags.size(); i++) {
+					for (int i = 1; i < tags.size(); i++) {
 						Tag tag = tags.get(i);
 						StringTokenizer st = new StringTokenizer(tag.name);
 	    				if (st.countTokens() > 1) {
