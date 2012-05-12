@@ -743,6 +743,6 @@ public class MapManupilator {
 		}
 	}
 	
-	return false
+	return false;
 	}
 }
