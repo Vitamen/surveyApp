@@ -339,22 +339,25 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
 			System.out.println("INTERSECTION");
 		}
 		
-//		for (String k : likesMap.keySet()){
-//    		if (mapMP.stopWordChecker(k)){
-//    			likesMap
-//    		}
-//    	}
+		//Remove the stopwords , aka common words
+		//Optimize this so that the words dont get putin in the first place
+		for (String k : userLikeMap.keySet()){
+    		if (mapMP.stopWordChecker(k)){
+    			userLikeMap.remove(k);
+    		}
+    	}
+		
+		
 		System.out.println("Size: " + userLikeMap);
 		
-		//System.out.println("Similar" + sm.cosine_similarity(friendUserLikeMap, currentUserLikeMap));
-    	
-		//We now have all the user like infromation extracted and want to reccomend somehting 
+		
+		//We now have all the user like information extracted and want to recommend something 
 		//User cos similarity and the clusters to layout the items.
 		
 		
 		
 		if (Cluster.count() < 5){
-			System.out.println("THERE ARE SOME ERROR DUDE");
+			System.out.println("THERE ARE NOT ENOUGH CLUSTERS");
 		}else{
 			
 			//THIS SHOULD BE IN PERSISTANT STORE , IT IS STUPID TO DO THIS EVERYTIME
