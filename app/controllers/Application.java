@@ -394,7 +394,7 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
 			     
 			     List<Topic> allTopics = Topic.findAll();
 			      
-			System.out.println(x.topics.get(x.topics.size()-1).description);
+			
 			
 			//TOPIC 1
 			String title = allTopics.get(randomTopic).title;
@@ -402,24 +402,33 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
 			String desc = allTopics.get(randomTopic).description;
 			renderArgs.put("t1d",Jsoup.parse(desc));
 			
-			//TOPIC 2 is the computed Topic
-			int generatedTopic = randomGenerator.nextInt(x.topics.size());
-			String title2 = x.topics.get(generatedTopic).title;
-			renderArgs.put("t2t",title2);			
-			String desc2 = x.topics.get(generatedTopic).description;
+			String title2;
+			String desc2;
+			
+			if(x != null){
+				//TOPIC 2 is the computed Topic
+				int generatedTopic = randomGenerator.nextInt(x.topics.size());
+				 title2 = x.topics.get(generatedTopic).title;	
+				desc2 = x.topics.get(generatedTopic).description;
+				
+			}else{
+				randomTopic = randomGenerator.nextInt((int) (Topic.count()-1));
+				title2 = allTopics.get(randomTopic).title;
+				renderArgs.put("t1t",title);
+				desc2 = allTopics.get(randomTopic).description;
+				renderArgs.put("t1d",Jsoup.parse(desc));
+			}
+			renderArgs.put("t2t",title2);
 			renderArgs.put("t2d",Jsoup.parse(desc2));
 			
+			//TOPIC 3
 			//Generate new random
 			randomTopic = randomGenerator.nextInt((int) (Topic.count()-1));
-			
-			//TOPIC 3
 			String title3 = allTopics.get(randomTopic).title;
 			renderArgs.put("t3t",title3);
 			String desc3 = allTopics.get(randomTopic).description;
 			renderArgs.put("t3d",Jsoup.parse(desc3));
 	       
-	       //Rendering template
-	       //renderTemplate("Recommendation/verticalTopics.html");		
 			render();
 
 		}

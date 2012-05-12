@@ -718,7 +718,7 @@ public class MapManupilator {
 			"words",
 			"world",
 			"would",
-			"wouldn\"t",
+			"wouldn't",
 			"www",
 			"x",
 			"y",
@@ -726,7 +726,7 @@ public class MapManupilator {
 			"yet",
 			"you",
 			"youd",
-			"you\"ll",
+			"you'll",
 			"your",
 			"youre",
 			"yours",
@@ -738,7 +738,7 @@ public class MapManupilator {
 		};
 
 	for(String w : stopWords){
-		if (w.equals(word)){
+		if (w.equalsIgnoreCase(word)){
 			return true;
 		}
 	}
