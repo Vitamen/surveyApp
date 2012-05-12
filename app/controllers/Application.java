@@ -65,17 +65,14 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
 		}
     	return true;
     }
-    
-    public static void displayFriends(){
-    	 
-         //Call the page with the friends list
-         displayFriends(Session.current().get("user"));
-    }
-    
+  
     /*
      * This method will now display a page with a simple system for the user to select a friend
      */
     public static void displayFriends(String userId){
+    	if (userId == null){
+    		userId = Session.current().get("user");
+    	}
     	//Should try to change it so that it gets the user id from the session
     	StringBuffer queryPart = new StringBuffer(userId+"/friends");
         
@@ -104,6 +101,7 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
 			e.printStackTrace();
 		}
 		
+		render();
     }
     
     /* Facebook Session Stuff
