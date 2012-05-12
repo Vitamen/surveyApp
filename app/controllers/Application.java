@@ -414,12 +414,10 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
 			}else{
 				randomTopic = randomGenerator.nextInt((int) (Topic.count()-1));
 				title2 = allTopics.get(randomTopic).title;
-				renderArgs.put("t1t",title);
 				desc2 = allTopics.get(randomTopic).description;
-				renderArgs.put("t1d",Jsoup.parse(desc));
 			}
 			renderArgs.put("t2t",title2);
-			renderArgs.put("t2d",Jsoup.parse(desc2));
+			renderArgs.put("t2d",desc2.toString());
 			
 			//TOPIC 3
 			//Generate new random
@@ -427,7 +425,7 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
 			String title3 = allTopics.get(randomTopic).title;
 			renderArgs.put("t3t",title3);
 			String desc3 = allTopics.get(randomTopic).description;
-			renderArgs.put("t3d",Jsoup.parse(desc3));
+			renderArgs.put("t3d",desc3.toString());
 	       
 			render();
 

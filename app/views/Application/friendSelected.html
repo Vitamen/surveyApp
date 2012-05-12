@@ -29,9 +29,11 @@
 		<button type="submit" class="btn btn-success">Select Topic</button>
 		</div>
 		</form>
-		<blockquote>
-			${t2d}
-		</blockquote>
+		<div>
+			%{
+				out.write(t2d);
+			}%
+		</div>
 	</div>	
 	
 	<div class="well">
@@ -42,9 +44,11 @@
 		
 		</div>
 		</form>
-		<blockquote>
-			${t3d}
-		</blockquote>
+		<div>
+			%{
+				out.write(t3d);
+			}%
+		</div>
 	</div>	
 	
 	
