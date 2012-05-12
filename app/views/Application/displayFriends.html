@@ -6,7 +6,7 @@
 
 <div class = "container">
 	<form class="form-inline" action="@{Application.friendSelected()}">
-	<label>Select a friend to generate conversation topics ${allFriends.get(0)}</label>
+	<label>Select a friend to generate conversation topics</label>
 		<select name="friendName">
 			%{
 				for (int i =0; i<FriendsJsonArray.size(); i++)
