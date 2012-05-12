@@ -401,7 +401,7 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
 			renderArgs.put("t1d",desc);
 			
 			//TOPIC 2 is the computed Topic
-			int generatedTopic = randomGenerator.nextInt(x.topics.size()-1);
+			int generatedTopic = randomGenerator.nextInt(x.topics.size());
 			String title2 = x.topics.get(generatedTopic).title;
 			renderArgs.put("t2t",title2);			
 			String desc2 = x.topics.get(generatedTopic).description;
