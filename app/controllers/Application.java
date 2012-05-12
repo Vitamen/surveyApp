@@ -317,11 +317,12 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
     	
     	//We want to create a hashmap of user likes 
     	HashMap<String, Double> currentUserLikeMap = getLikesMap(Session.current().get("user"));
+    	System.out.println("User like map Size : " + currentUserLikeMap.size() );
     	
     	//We want to create a hashmap of friends likes
     	HashMap<String, Double> friendUserLikeMap = getLikesMap(friendName);
-
-  
+    	System.out.println("Friend like map Size : " + currentUserLikeMap.size() );
+    	
 		similarityAlgo sm = new similarityAlgo();
 		MapManupilator mapMP = new MapManupilator();
 		
@@ -385,7 +386,6 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
 			  Random randomGenerator = new Random();
 			      int randomTopic = randomGenerator.nextInt((int) (Topic.count()-1));
 			     
-			  
 			     List<Topic> allTopics = Topic.findAll();
 			      
 			System.out.println(x.topics.get(x.topics.size()-1).description);
@@ -395,7 +395,6 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
 			renderArgs.put("t1t",title);
 			String desc = allTopics.get(randomTopic).description;
 			renderArgs.put("t1d",desc);
-			
 			
 			//TOPIC 2 is the computed Topic
 			int generatedTopic = randomGenerator.nextInt(x.topics.size()-1);
