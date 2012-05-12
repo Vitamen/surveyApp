@@ -66,6 +66,11 @@ static String access_token = "AAACEdEose0cBAOZAofIflHZBPLVxZCYme0G3Y7ZCPLZANDb3H
     	return true;
     }
     
+    public static void displayFriends(){
+    	 
+         //Call the page with the friends list
+         displayFriends(Session.current().get("user"));
+    }
     
     /*
      * This method will now display a page with a simple system for the user to select a friend
