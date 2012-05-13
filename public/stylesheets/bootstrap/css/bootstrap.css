@@ -450,6 +450,10 @@ blockquote p {
   font-weight: 300;
   line-height: 22.5px;
 }
+.rightFloat{
+	float:right;
+}
+
 blockquote small {
   display: block;
   line-height: 18px;
